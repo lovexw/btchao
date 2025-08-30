@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 禁用Cloudflare Rocket Loader -->
     <script data-cfasync="false"></script>
+    <script>if(typeof CloudFlare!=='undefined'){CloudFlare.push(function(){CloudFlare.rocket.disable();});}</script>
     <title>AHR999指数 | 比特币投资时机判断工具</title>
     <meta name="description" content="实时AHR999指数查询工具，科学判断比特币投资时机。基于200日移动平均线和定投成本的量化指标，帮助投资者制定合理的买入策略。">
     <meta name="keywords" content="AHR999,比特币指数,投资时机,定投,九神,囤币指标">
@@ -20,8 +21,11 @@
          crossorigin="anonymous"></script>
     <!-- CDN回退机制 -->
     <script src="./cdn-fallback-enhanced.js"></script>
+    <!-- 页面修复脚本 -->
+    <script src="./fix-all-pages.js"></script>
     <script>
-        tailwind.config = {
+        // Tailwind配置已移除，使用预编译版本
+        var tailwindConfig = {
             theme: {
                 extend: {
                     colors: {
