@@ -12,53 +12,72 @@
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="robots" content="index, follow">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 使用稳定的CDN源 -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2726670321929378"
-         crossorigin="anonymous"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#F7931A', // 比特币橙色
-                        secondary: '#1E3A8A',
-                        dark: '#0F172A',
-                        light: '#F8FAFC'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                }
-            }
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    
+    <!-- 暂时注释AdSense避免错误 -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2726670321929378" crossorigin="anonymous"></script> -->
+    <style>
+        /* 自定义颜色变量 */
+        :root {
+            --primary: #F7931A;
+            --secondary: #1E3A8A;
+            --dark: #0F172A;
+            --light: #F8FAFC;
         }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .text-shadow {
-                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .section-fade {
-                opacity: 0;
-                transform: translateY(20px);
-                transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-            }
-            .section-visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            .nav-active {
-                border-left: 3px solid theme('colors.primary');
-                padding-left: 0.75rem;
-                color: theme('colors.primary');
-            }
+        
+        /* 确保导航栏在最顶层 */
+        header {
+            z-index: 99999 !important;
+            position: fixed !important;
         }
+        
+        /* 自定义样式 */
+        .text-shadow {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .section-fade {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .nav-active {
+            border-left: 3px solid var(--primary);
+            padding-left: 0.75rem;
+            color: var(--primary);
+        }
+        
+        /* 比特币橙色相关样式 */
+        .text-primary { color: var(--primary) !important; }
+        .bg-primary { background-color: var(--primary) !important; }
+        .bg-primary\/10 { background-color: rgba(247, 147, 26, 0.1) !important; }
+        .bg-primary\/20 { background-color: rgba(247, 147, 26, 0.2) !important; }
+        .border-primary { border-color: var(--primary) !important; }
+        .hover\:bg-primary\/90:hover { background-color: rgba(247, 147, 26, 0.9) !important; }
+        .hover\:text-primary:hover { color: var(--primary) !important; }
+        
+        /* 其他颜色 */
+        .text-secondary { color: var(--secondary) !important; }
+        .text-dark { color: var(--dark) !important; }
+        .bg-dark { background-color: var(--dark) !important; }
+        
+        /* 修复渐变背景 */
+        .bg-gradient-to-br {
+            background: linear-gradient(to bottom right, var(--dark), var(--secondary)) !important;
+        }
+        .from-dark { --tw-gradient-from: var(--dark); }
+        .to-secondary { --tw-gradient-to: var(--secondary); }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gray-50 text-gray-800 font-sans" style="margin: 0; padding: 0;">
     <!-- 导航栏 -->
-    <header class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-sm shadow-sm z-50 transition-all duration-300">
+    <header class="fixed top-0 left-0 right-0 shadow-sm transition-all duration-300" style="z-index: 99999; position: fixed; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <i class="fa fa-bitcoin text-primary text-2xl"></i>
@@ -88,7 +107,7 @@
     </header>
 
     <!-- 英雄区 -->
-    <section class="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-dark to-secondary text-white">
+    <section class="pt-24 pb-16 md:pt-32 md:pb-24 text-white" style="background: linear-gradient(to bottom right, #0F172A, #1E3A8A); position: relative; z-index: 1; margin-top: 0;">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto text-center">
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-shadow">
@@ -973,6 +992,13 @@
 
         // 比特币周期图表
         function initChart() {
+            // 检查Chart.js是否加载成功
+            if (typeof Chart === 'undefined') {
+                console.log('Chart.js未加载，跳过图表初始化');
+                document.getElementById('bitcoinCycleChart').style.display = 'none';
+                return;
+            }
+            
             const ctx = document.getElementById('bitcoinCycleChart').getContext('2d');
             
             new Chart(ctx, {
