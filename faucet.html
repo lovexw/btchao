@@ -10,10 +10,15 @@
     <meta property="og:title" content="比特币水龙头 | Bitcoin Faucet - 免费获取比特币">
     <meta property="og:description" content="怀念早期比特币水龙头网站，了解比特币普及历史和社区文化。">
     <meta name="robots" content="index, follow">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 禁用Cloudflare Rocket Loader -->
+    <script data-cfasync="false"></script>
+    <!-- 使用更稳定的CDN -->
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2726670321929378"
          crossorigin="anonymous"></script>
+    <!-- CDN回退机制 -->
+    <script src="./cdn-fallback-enhanced.js"></script>
     <style>
         /* 复古风格样式 */
         body {
