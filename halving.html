@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比特币减半全解析 | 历史数据与未来预测</title>
+    <meta name="description" content="深度解析比特币减半机制，包含历史减半数据、价格走势分析、未来减半时间预测。了解减半对比特币价格的影响和投资机会。">
+    <meta name="keywords" content="比特币减半,减半时间,价格预测,历史数据,投资机会,区块奖励">
+    <meta name="author" content="小吴乐意">
+    <meta property="og:title" content="比特币减半全解析 | 历史数据与未来预测">
+    <meta property="og:description" content="深度解析比特币减半机制，包含历史减半数据、价格走势分析、未来减半时间预测。">
+    <meta name="robots" content="index, follow">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2726670321929378"
+         crossorigin="anonymous"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#F7931A',
+                        secondary: '#1E3A8A',
+                        dark: '#0F172A',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'slide-up': 'slideUp 0.8s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'countdown': 'countdown 1s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes countdown {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .halving-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-left: 4px solid #F7931A;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .timeline-item {
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: #F7931A;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #F7931A;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <div class="animate-fade-in">
+                <h1 class="text-5xl font-bold mb-4">
+                    <i class="fa fa-bitcoin text-primary mr-3"></i>
+                    比特币减半全解析
+                </h1>
+                <p class="text-xl mb-8 opacity-90">深度解读比特币减半机制 | 历史数据 | 市场影响 | 未来预测</p>
+                
+                <!-- 实时价格显示 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 max-w-4xl mx-auto mb-6">
+                    <div class="grid md:grid-cols-3 gap-4 text-center">
+                        <div>
+                            <div class="text-sm opacity-80 mb-1">当前价格</div>
+                            <div class="text-2xl font-bold current-price">$65,000</div>
+                        </div>
+                        <div>
+                            <div class="text-sm opacity-80 mb-1">距离减半</div>
+                            <div class="text-2xl font-bold">1,245天</div>
+                        </div>
+                        <div>
+                            <div class="text-sm opacity-80 mb-1">数据更新</div>
+                            <div class="text-sm" id="lastUpdate">加载中...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 下次减半倒计时 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto">
+                    <h3 class="text-2xl font-bold mb-4">距离下次减半还有</h3>
+                    <div id="countdown" class="grid grid-cols-4 gap-4 text-center">
+                        <div class="animate-countdown">
+                            <div class="text-3xl font-bold" id="years">3</div>
+                            <div class="text-sm opacity-80">年</div>
+                        </div>
+                        <div class="animate-countdown">
+                            <div class="text-3xl font-bold" id="days">245</div>
+                            <div class="text-sm opacity-80">天</div>
+                        </div>
+                        <div class="animate-countdown">
+                            <div class="text-3xl font-bold" id="hours">12</div>
+                            <div class="text-sm opacity-80">小时</div>
+                        </div>
+                        <div class="animate-countdown">
+                            <div class="text-3xl font-bold" id="minutes">30</div>
+                            <div class="text-sm opacity-80">分钟</div>
+                        </div>
+                    </div>
+                    <p class="text-sm mt-4 opacity-80">预计时间：2028年4月</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 快速导航 -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center space-x-8 py-4">
+                <a href="#overview" class="nav-link text-gray-600 hover:text-primary transition-colors">减半概述</a>
+                <a href="#history" class="nav-link text-gray-600 hover:text-primary transition-colors">历史数据</a>
+                <a href="#impact" class="nav-link text-gray-600 hover:text-primary transition-colors">市场影响</a>
+                <a href="#future" class="nav-link text-gray-600 hover:text-primary transition-colors">未来预测</a>
+                <a href="#calculator" class="nav-link text-gray-600 hover:text-primary transition-colors">收益计算</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- 减半概述 -->
+        <section id="overview" class="mb-16 animate-slide-up">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                <i class="fa fa-info-circle text-primary mr-2"></i>
+                什么是比特币减半？
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="halving-card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-primary">
+                        <i class="fa fa-cogs mr-2"></i>技术原理
+                    </h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            每210,000个区块触发一次减半事件
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            区块奖励减少50%，约每4年发生一次
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            控制比特币总供应量，最终上限2100万枚
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            通过代码自动执行，无需人工干预
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="halving-card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-primary">
+                        <i class="fa fa-line-chart mr-2"></i>经济意义
+                    </h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fa fa-arrow-down text-red-500 mr-2 mt-1"></i>
+                            新币产出速度减缓，供应增长放缓
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-shield text-blue-500 mr-2 mt-1"></i>
+                            抗通胀设计，保护长期价值
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-users text-purple-500 mr-2 mt-1"></i>
+                            影响矿工收益和网络安全
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-globe text-green-500 mr-2 mt-1"></i>
+                            历史上常伴随价格上涨周期
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 当前状态 -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold text-center mb-6">当前减半状态</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary mb-2">4</div>
+                        <div class="text-gray-600">已完成减半次数</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary mb-2">3.125</div>
+                        <div class="text-gray-600">当前区块奖励 (BTC)</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary mb-2">19.7M</div>
+                        <div class="text-gray-600">已挖出比特币</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary mb-2">93.8%</div>
+                        <div class="text-gray-600">总供应量占比</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 历史数据 -->
+        <section id="history" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                <i class="fa fa-history text-primary mr-2"></i>
+                历史减半数据
+            </h2>
+
+            <!-- 减半时间线 -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold mb-6">减半时间线</h3>
+                <div class="space-y-6">
+                    <div class="timeline-item pl-8 border-l-2 border-gray-200">
+                        <div class="flex flex-wrap items-center justify-between mb-2">
+                            <h4 class="text-lg font-bold">创世区块</h4>
+                            <span class="text-sm text-gray-500">2009年1月3日</span>
+                        </div>
+                        <p class="text-gray-600 mb-2">初始区块奖励：<span class="font-bold text-primary">50 BTC</span></p>
+                        <p class="text-sm text-gray-500">比特币网络正式启动，开启了数字货币新时代</p>
+                    </div>
+
+                    <div class="timeline-item pl-8 border-l-2 border-gray-200">
+                        <div class="flex flex-wrap items-center justify-between mb-2">
+                            <h4 class="text-lg font-bold">第一次减半</h4>
+                            <span class="text-sm text-gray-500">2012年11月28日</span>
+                        </div>
+                        <p class="text-gray-600 mb-2">区块奖励：<span class="font-bold text-primary">50 → 25 BTC</span></p>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>减半前价格: $12</div>
+                            <div>减半后1年: $1,000+</div>
+                            <div>区块高度: 210,000</div>
+                            <div>涨幅: 8,233%</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item pl-8 border-l-2 border-gray-200">
+                        <div class="flex flex-wrap items-center justify-between mb-2">
+                            <h4 class="text-lg font-bold">第二次减半</h4>
+                            <span class="text-sm text-gray-500">2016年7月9日</span>
+                        </div>
+                        <p class="text-gray-600 mb-2">区块奖励：<span class="font-bold text-primary">25 → 12.5 BTC</span></p>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>减半前价格: $650</div>
+                            <div>减半后1.5年: $20,000</div>
+                            <div>区块高度: 420,000</div>
+                            <div>涨幅: 2,977%</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item pl-8 border-l-2 border-gray-200">
+                        <div class="flex flex-wrap items-center justify-between mb-2">
+                            <h4 class="text-lg font-bold">第三次减半</h4>
+                            <span class="text-sm text-gray-500">2020年5月11日</span>
+                        </div>
+                        <p class="text-gray-600 mb-2">区块奖励：<span class="font-bold text-primary">12.5 → 6.25 BTC</span></p>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>减半前价格: $8,500</div>
+                            <div>减半后1.5年: $69,000</div>
+                            <div>区块高度: 630,000</div>
+                            <div>涨幅: 712%</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item pl-8 border-l-2 border-gray-200">
+                        <div class="flex flex-wrap items-center justify-between mb-2">
+                            <h4 class="text-lg font-bold text-red-600">第四次减半</h4>
+                            <span class="text-sm text-gray-500">2024年4月20日</span>
+                        </div>
+                        <p class="text-gray-600 mb-2">区块奖励：<span class="font-bold text-primary">6.25 → 3.125 BTC</span></p>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>减半前价格: $64,000</div>
+                            <div>当前价格: <span id="currentPrice" class="current-price font-bold text-green-600">$108,280</span> <span class="text-xs text-blue-500">(实时)</span></div>
+                            <div>区块高度: 840,000</div>
+                            <div>涨幅: <span class="text-green-600">进行中...</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 历史价格图表 -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h3 class="text-xl font-bold mb-6">历史价格与减半关系</h3>
+                <div class="chart-container">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 市场影响分析 -->
+        <section id="impact" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                <i class="fa fa-bar-chart text-primary mr-2"></i>
+                市场影响分析
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <!-- 供需分析 -->
+                <div class="stats-card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-primary">
+                        <i class="fa fa-balance-scale mr-2"></i>供需关系
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span>日产出量减少</span>
+                            <span class="font-bold text-red-500">-50%</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span>年通胀率</span>
+                            <span class="font-bold text-blue-500">1.8% → 0.9%</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span>稀缺性增强</span>
+                            <span class="font-bold text-green-500">+100%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 矿工影响 -->
+                <div class="stats-card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4 text-primary">
+                        <i class="fa fa-cog mr-2"></i>矿工生态
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span>挖矿收益</span>
+                            <span class="font-bold text-red-500">-50%</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span>算力调整</span>
+                            <span class="font-bold text-orange-500">2-4周</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <span>设备更新</span>
+                            <span class="font-bold text-blue-500">加速</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 价格表现统计 -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h3 class="text-xl font-bold mb-6">减半后价格表现统计</h3>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6 mt-6">
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-2xl font-bold text-green-500 mb-2">100%</div>
+                        <div class="text-sm text-gray-600">减半后价格上涨概率</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-2xl font-bold text-blue-500 mb-2">18个月</div>
+                        <div class="text-sm text-gray-600">平均牛市持续时间</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-2xl font-bold text-purple-500 mb-2">3,641%</div>
+                        <div class="text-sm text-gray-600">历史平均涨幅</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 未来预测 -->
+        <section id="future" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                <i class="fa fa-crystal-ball text-primary mr-2"></i>
+                未来减半预测
+            </h2>
+
+            <!-- 未来减半时间表 -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-bold mb-6">未来减半时间表</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-3">减半次数</th>
+                                <th class="text-left py-3">预计时间</th>
+                                <th class="text-left py-3">区块高度</th>
+                                <th class="text-left py-3">区块奖励</th>
+                                <th class="text-left py-3">累计产出</th>
+                                <th class="text-left py-3">剩余产出</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 font-bold text-red-600">第5次</td>
+                                <td class="py-3">2028年4月</td>
+                                <td class="py-3">1,050,000</td>
+                                <td class="py-3">1.5625 BTC</td>
+                                <td class="py-3">20,671,875</td>
+                                <td class="py-3">328,125</td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 font-bold">第6次</td>
+                                <td class="py-3">2032年</td>
+                                <td class="py-3">1,260,000</td>
+                                <td class="py-3">0.78125 BTC</td>
+                                <td class="py-3">20,835,937.5</td>
+                                <td class="py-3">164,062.5</td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 font-bold">第7次</td>
+                                <td class="py-3">2036年</td>
+                                <td class="py-3">1,470,000</td>
+                                <td class="py-3">0.390625 BTC</td>
+                                <td class="py-3">20,917,968.75</td>
+                                <td class="py-3">82,031.25</td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 font-bold">第8次</td>
+                                <td class="py-3">2040年</td>
+                                <td class="py-3">1,680,000</td>
+                                <td class="py-3">0.1953125 BTC</td>
+                                <td class="py-3">20,958,984.375</td>
+                                <td class="py-3">41,015.625</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 供应量预测图表 -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h3 class="text-xl font-bold mb-6">比特币供应量预测</h3>
+                <div class="chart-container">
+                    <canvas id="supplyChart"></canvas>
+                </div>
+                <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+                    <p class="text-sm text-yellow-800">
+                        <i class="fa fa-info-circle mr-2"></i>
+                        <strong>预测说明：</strong>基于当前出块时间和难度调整机制，实际时间可能因网络算力变化而有所偏差。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 收益计算器 -->
+        <section id="calculator" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                <i class="fa fa-calculator text-primary mr-2"></i>
+                减半收益计算器
+            </h2>
+
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- 输入参数 -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-6">投资参数设置</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">投资金额 (USD)</label>
+                                <input type="number" id="investment" class="w-full p-3 border rounded-lg" value="10000" min="100">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">购买价格 (USD)</label>
+                                <input type="number" id="buyPrice" class="w-full p-3 border rounded-lg" value="65000" min="1">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">目标价格 (USD)</label>
+                                <input type="number" id="targetPrice" class="w-full p-3 border rounded-lg" value="150000" min="1">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">持有时间 (月)</label>
+                                <input type="number" id="holdingPeriod" class="w-full p-3 border rounded-lg" value="18" min="1" max="60">
+                            </div>
+                            <button onclick="calculateReturns()" class="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-orange-600 transition-colors">
+                                计算收益
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 计算结果 -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-6">预期收益分析</h3>
+                        <div id="calculatorResults" class="space-y-4">
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <span>购买数量</span>
+                                    <span id="btcAmount" class="font-bold">0.154 BTC</span>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <span>目标价值</span>
+                                    <span id="targetValue" class="font-bold text-green-600">$23,100</span>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <span>预期收益</span>
+                                    <span id="profit" class="font-bold text-green-600">$13,100</span>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <span>收益率</span>
+                                    <span id="roi" class="font-bold text-green-600">131%</span>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <span>年化收益率</span>
+                                    <span id="annualizedRoi" class="font-bold text-blue-600">87.3%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-4 bg-red-50 border-l-4 border-red-400 rounded">
+                            <p class="text-sm text-red-800">
+                                <i class="fa fa-warning mr-2"></i>
+                                <strong>风险提示：</strong>以上计算仅供参考，加密货币投资存在高风险，价格可能大幅波动。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 专家观点 -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                <i class="fa fa-users text-primary mr-2"></i>
+                专家观点与分析
+            </h2>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa fa-user text-primary text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold">技术分析师观点</h4>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">
+                        "历史数据显示，每次减半后12-18个月内比特币价格都会创新高。供应冲击理论在前三次减半中得到验证。"
+                    </p>
+                    <div class="text-xs text-gray-500">
+                        <i class="fa fa-chart-line mr-1"></i>基于技术面分析
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa fa-university text-primary text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold">机构投资观点</h4>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">
+                        "减半事件强化了比特币的数字黄金叙事。机构配置需求在减半周期中显著增加，推动价格上涨。"
+                    </p>
+                    <div class="text-xs text-gray-500">
+                        <i class="fa fa-building mr-1"></i>基于机构研究
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa fa-cog text-primary text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold">矿工生态观点</h4>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">
+                        "减半迫使矿工提高效率，淘汰落后产能。长期看有利于网络安全和去中心化程度提升。"
+                    </p>
+                    <div class="text-xs text-gray-500">
+                        <i class="fa fa-cogs mr-1"></i>基于挖矿数据
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 返回主页 -->
+    <div class="fixed bottom-6 right-6">
+        <a href="index.html" class="bg-primary text-white p-4 rounded-full shadow-lg hover:bg-orange-600 transition-colors">
+            <i class="fa fa-home text-xl"></i>
+        </a>
+    </div>
+
+    <!-- 返回顶部 -->
+    <div class="fixed bottom-6 left-6">
+        <button onclick="scrollToTop()" class="bg-gray-600 text-white p-4 rounded-full shadow-lg hover:bg-gray-700 transition-colors">
+            <i class="fa fa-arrow-up text-xl"></i>
+        </button>
+    </div>
+
+    <script>
+        // 倒计时功能
+        function updateCountdown() {
+            const nextHalving = new Date('2028-04-20T00:00:00Z');
+            const now = new Date();
+            const diff = nextHalving - now;
+
+            const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+            const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            document.getElementById('years').textContent = years;
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+        }
+
+        // 更新当前价格显示
+        function updateCurrentPriceDisplay(currentPrice) {
+            // 更新页面中所有显示当前价格的地方
+            const priceElements = document.querySelectorAll('.current-price');
+            priceElements.forEach(element => {
+                element.textContent = '$' + currentPrice.toLocaleString();
+            });
+            
+            // 更新计算器中的默认购买价格
+            const buyPriceInput = document.getElementById('buyPrice');
+            if (buyPriceInput) {
+                buyPriceInput.value = Math.round(currentPrice);
+            }
+            
+            // 更新时间线中的当前价格
+            const currentPriceSpan = document.getElementById('currentPrice');
+            if (currentPriceSpan) {
+                currentPriceSpan.textContent = '$' + currentPrice.toLocaleString();
+            }
+        }
+
+        // 收益计算器
+        function calculateReturns() {
+            const investment = parseFloat(document.getElementById('investment').value);
+            const buyPrice = parseFloat(document.getElementById('buyPrice').value);
+            const targetPrice = parseFloat(document.getElementById('targetPrice').value);
+            const holdingPeriod = parseFloat(document.getElementById('holdingPeriod').value);
+
+            const btcAmount = investment / buyPrice;
+            const targetValue = btcAmount * targetPrice;
+            const profit = targetValue - investment;
+            const roi = (profit / investment) * 100;
+            const annualizedRoi = (Math.pow(targetValue / investment, 12 / holdingPeriod) - 1) * 100;
+
+            document.getElementById('btcAmount').textContent = btcAmount.toFixed(6) + ' BTC';
+            document.getElementById('targetValue').textContent = '$' + targetValue.toLocaleString();
+            document.getElementById('profit').textContent = '$' + profit.toLocaleString();
+            document.getElementById('roi').textContent = roi.toFixed(1) + '%';
+            document.getElementById('annualizedRoi').textContent = annualizedRoi.toFixed(1) + '%';
+        }
+
+        // 获取实时比特币价格数据
+        async function fetchBitcoinPriceData() {
+            try {
+                // 显示加载状态
+                const loadingElements = document.querySelectorAll('.current-price');
+                loadingElements.forEach(el => el.textContent = '加载中...');
+                
+                const response = await fetch('https://raw.githubusercontent.com/lovexw/btc-ma-new/main/public/btc-price.csv');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                
+                // 解析CSV数据
+                const lines = csvText.trim().split('\n');
+                const data = [];
+                
+                // 跳过标题行，从第二行开始解析
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    // 处理可能包含逗号的CSV格式
+                    const values = line.split(',');
+                    if (values.length >= 2) {
+                        const date = values[0].trim();
+                        const priceStr = values[1].trim();
+                        const price = parseFloat(priceStr);
+                        
+                        // 验证日期格式和价格有效性
+                        if (date && !isNaN(price) && price > 0) {
+                            data.push({ date, price });
+                        }
+                    }
+                }
+                
+                // 按日期排序
+                data.sort((a, b) => new Date(a.date) - new Date(b.date));
+                
+                console.log(`成功获取 ${data.length} 条价格数据`);
+                return data.length > 0 ? data : getFallbackPriceData();
+                
+            } catch (error) {
+                console.error('获取价格数据失败:', error);
+                // 显示错误状态
+                const loadingElements = document.querySelectorAll('.current-price');
+                loadingElements.forEach(el => el.textContent = '数据获取失败');
+                
+                // 返回备用数据
+                return getFallbackPriceData();
+            }
+        }
+
+        // 备用价格数据
+        function getFallbackPriceData() {
+            return [
+                { date: '2009-01-03', price: 0 },
+                { date: '2010-07-17', price: 0.1 },
+                { date: '2011-06-08', price: 32 },
+                { date: '2012-11-28', price: 12 },
+                { date: '2013-11-30', price: 1000 },
+                { date: '2014-12-31', price: 320 },
+                { date: '2015-12-31', price: 430 },
+                { date: '2016-07-09', price: 650 },
+                { date: '2017-12-17', price: 20000 },
+                { date: '2018-12-31', price: 3700 },
+                { date: '2019-12-31', price: 7200 },
+                { date: '2020-05-11', price: 8500 },
+                { date: '2021-11-10', price: 69000 },
+                { date: '2022-12-31', price: 16500 },
+                { date: '2023-12-31', price: 42000 },
+                { date: '2024-04-20', price: 64000 },
+                { date: '2024-12-31', price: 65000 }
+            ];
+        }
+
+        // 处理价格数据用于图表显示
+        function processPriceDataForChart(data) {
+            // 按年份聚合数据，取每年的最后一个价格
+            const yearlyData = {};
+            
+            data.forEach(item => {
+                const year = new Date(item.date).getFullYear();
+                if (!yearlyData[year] || new Date(item.date) > new Date(yearlyData[year].date)) {
+                    yearlyData[year] = item;
+                }
+            });
+            
+            const sortedYears = Object.keys(yearlyData).sort();
+            const labels = sortedYears;
+            const prices = sortedYears.map(year => yearlyData[year].price);
+            
+            return { labels, prices };
+        }
+
+        // 图表初始化
+        async function initCharts() {
+            // 获取实时价格数据
+            const priceData = await fetchBitcoinPriceData();
+            const chartData = processPriceDataForChart(priceData);
+            
+            // 更新当前价格显示
+            const currentPrice = priceData[priceData.length - 1]?.price || 108280;
+            updateCurrentPriceDisplay(currentPrice);
+            
+            // 历史价格图表
+            const priceCtx = document.getElementById('priceChart').getContext('2d');
+            new Chart(priceCtx, {
+                type: 'line',
+                data: {
+                    labels: chartData.labels,
+                    datasets: [{
+                        label: '比特币价格 (USD)',
+                        data: chartData.prices,
+                        borderColor: '#F7931A',
+                        backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                        tension: 0.4,
+                        pointBackgroundColor: '#F7931A',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `价格: $${context.parsed.y.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'logarithmic',
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: '价格 (USD, 对数刻度)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '年份'
+                            }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            hoverRadius: 8
+                        }
+                    }
+                }
+            });
+
+            // 减半后表现图表
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(performanceCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['第1次减半', '第2次减半', '第3次减半', '第4次减半'],
+                    datasets: [{
+                        label: '减半后18个月涨幅 (%)',
+                        data: [8233, 2977, 712, 0],
+                        backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b'],
+                        borderColor: ['#059669', '#2563eb', '#7c3aed', '#d97706'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '涨幅 (%)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 供应量预测图表
+            const supplyCtx = document.getElementById('supplyChart').getContext('2d');
+            new Chart(supplyCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2009', '2012', '2016', '2020', '2024', '2028', '2032', '2036', '2040', '2044'],
+                    datasets: [{
+                        label: '比特币总供应量',
+                        data: [0, 10.5, 15.75, 18.375, 19.6875, 20.671875, 20.835938, 20.917969, 20.958984, 20.979492],
+                        borderColor: '#F7931A',
+                        backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: '理论最大供应量',
+                        data: [21, 21, 21, 21, 21, 21, 21, 21, 21, 21],
+                        borderColor: '#ef4444',
+                        borderDash: [5, 5],
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 22,
+                            title: {
+                                display: true,
+                                text: '供应量 (百万 BTC)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '年份'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 平滑滚动
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 导航链接平滑滚动
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // 更新数据时间显示
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            const lastUpdateElement = document.getElementById('lastUpdate');
+            if (lastUpdateElement) {
+                lastUpdateElement.textContent = timeString;
+            }
+        }
+
+        // 定期更新价格数据
+        async function refreshPriceData() {
+            try {
+                const priceData = await fetchBitcoinPriceData();
+                const currentPrice = priceData[priceData.length - 1]?.price || 108280;
+                updateCurrentPriceDisplay(currentPrice);
+                updateLastUpdateTime();
+                
+                // 更新计算器默认值
+                calculateReturns();
+                
+                console.log('价格数据更新成功:', currentPrice);
+            } catch (error) {
+                console.error('价格数据更新失败:', error);
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCountdown();
+            setInterval(updateCountdown, 60000); // 每分钟更新一次倒计时
+            
+            calculateReturns(); // 初始计算
+            initCharts(); // 初始化图表（包含价格数据获取）
+            
+            // 每小时更新一次价格数据
+            setInterval(refreshPriceData, 3600000);
+            
+            // 初始更新时间显示
+            updateLastUpdateTime();
+        });
+
+        // 滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // 观察所有需要动画的元素
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('section').forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>

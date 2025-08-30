@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比特币囤币入门指南 | 从零开始的囤币之路</title>
+    <meta name="description" content="专业的比特币囤币入门教程，涵盖基础概念、购买方法、钱包使用、定投策略等全方位指导。包含AHR999指数、减半分析、白皮书解读等实用工具。">
+    <meta name="keywords" content="比特币,囤币,定投,AHR999,减半,白皮书,钱包,投资策略">
+    <meta name="author" content="小吴乐意">
+    <meta property="og:title" content="比特币囤币入门指南 | 从零开始的囤币之路">
+    <meta property="og:description" content="专业的比特币囤币入门教程，涵盖基础概念、购买方法、钱包使用、定投策略等全方位指导。">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="index, follow">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2726670321929378"
+         crossorigin="anonymous"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#F7931A', // 比特币橙色
+                        secondary: '#1E3A8A',
+                        dark: '#0F172A',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .section-fade {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            }
+            .section-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .nav-active {
+                border-left: 3px solid theme('colors.primary');
+                padding-left: 0.75rem;
+                color: theme('colors.primary');
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <!-- 导航栏 -->
+    <header class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-sm shadow-sm z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-bitcoin text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold text-dark">比特币囤币入门</h1>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#concepts" class="hover:text-primary transition-colors">基础概念</a>
+                <a href="#purchase" class="hover:text-primary transition-colors">试着购买</a>
+                <a href="#hoarding" class="hover:text-primary transition-colors">囤币开始</a>
+                <a href="#定投" class="hover:text-primary transition-colors">学着定投</a>
+                <a href="#life" class="hover:text-primary transition-colors">享受生活</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-gray-700">
+                <i class="fa fa-bars text-xl"></i>
+            </button>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+                <a href="#concepts" class="py-2 hover:text-primary transition-colors">基础概念</a>
+                <a href="#purchase" class="py-2 hover:text-primary transition-colors">试着购买</a>
+                <a href="#hoarding" class="py-2 hover:text-primary transition-colors">囤币开始</a>
+                <a href="#定投" class="py-2 hover:text-primary transition-colors">学着定投</a>
+                <a href="#life" class="py-2 hover:text-primary transition-colors">享受生活</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区 -->
+    <section class="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-dark to-secondary text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-shadow">
+                    从零开始的<span class="text-primary">比特币囤币</span>之旅
+                </h1>
+                <p class="text-xl md:text-2xl opacity-90 mb-8">
+                    简单、安全、系统地学习如何购买和持有比特币
+                </p>
+                <a href="#concepts" class="inline-block bg-primary hover:bg-primary/90 text-white font-semibold px-8 py-3 rounded-full transition-all transform hover:scale-105 shadow-lg">
+                    开始学习 <i class="fa fa-arrow-down ml-2"></i>
+                </a>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-50 to-transparent"></div>
+    </section>
+
+    <!-- 主要内容区 -->
+    <main class="container mx-auto px-4 py-12">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- 侧边导航 - 桌面版 -->
+            <aside class="hidden lg:block w-64 flex-shrink-0 sticky top-24 self-start">
+                <nav class="bg-white rounded-lg shadow p-4">
+                    <h3 class="font-semibold text-gray-700 mb-4 pb-2 border-b">学习目录</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#concepts" class="nav-link block hover:text-primary transition-colors">1. 基础概念</a></li>
+                        <li><a href="#purchase" class="nav-link block hover:text-primary transition-colors">2. 试着购买</a></li>
+                        <li><a href="#hoarding" class="nav-link block hover:text-primary transition-colors">3. 囤币开始</a></li>
+                        <li><a href="#定投" class="nav-link block hover:text-primary transition-colors">4. 学着定投</a></li>
+                        <li><a href="#navigation" class="nav-link block hover:text-primary transition-colors">5. 网站导航</a></li>
+                        <li><a href="#life" class="nav-link block hover:text-primary transition-colors">6. 享受生活</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- 主要内容 -->
+            <div class="flex-1 max-w-3xl mx-auto">
+                <!-- 1. 基础概念 -->
+                <section id="concepts" class="mb-20 section-fade">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold mr-4">1</div>
+                        <h2 class="text-3xl font-bold text-dark">基础概念</h2>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">必读文档</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start">
+                                    <i class="fa fa-file-text-o text-primary text-2xl mt-1 mr-4"></i>
+                                    <div>
+                                        <h4 class="font-medium mb-2">比特币白皮书</h4>
+                                        <p class="text-gray-600 mb-3 text-sm">中本聪于2008年发表的比特币核心文档，理解比特币的起源和原理</p>
+                                        <a href="whitepaper.html" target="_blank" class="inline-flex items-center text-primary hover:underline text-sm">
+                                            查看中文版 <i class="fa fa-external-link ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start">
+                                    <i class="fa fa-scissors text-primary text-2xl mt-1 mr-4"></i>
+                                    <div>
+                                        <h4 class="font-medium mb-2">比特币减半全解析</h4>
+                                        <p class="text-gray-600 mb-3 text-sm">深度解读减半机制、历史数据分析和未来预测，投资必备知识</p>
+                                        <a href="halving.html" target="_blank" class="inline-flex items-center text-primary hover:underline text-sm">
+                                            详细了解 <i class="fa fa-external-link ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start">
+                                    <i class="fa fa-bar-chart text-primary text-2xl mt-1 mr-4"></i>
+                                    <div>
+                                        <h4 class="font-medium mb-2">AHR999投资指数</h4>
+                                        <p class="text-gray-600 mb-3 text-sm">科学判断比特币投资时机的量化指标，历史回测验证有效性</p>
+                                        <a href="ahr999.html" target="_blank" class="inline-flex items-center text-primary hover:underline text-sm">
+                                            查看指数 <i class="fa fa-external-link ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start">
+                                    <i class="fa fa-tint text-primary text-2xl mt-1 mr-4"></i>
+                                    <div>
+                                        <h4 class="font-medium mb-2">比特币水龙头怀念</h4>
+                                        <p class="text-gray-600 mb-3 text-sm">重温早期比特币水龙头网站，了解比特币普及历史和社区文化</p>
+                                        <a href="faucet.html" target="_blank" class="inline-flex items-center text-primary hover:underline text-sm">
+                                            怀念体验 <i class="fa fa-external-link ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start">
+                                    <i class="fa fa-book text-primary text-2xl mt-1 mr-4"></i>
+                                    <div>
+                                        <h4 class="font-medium mb-2">囤比特币 - 九神经典</h4>
+                                        <p class="text-gray-600 mb-3 text-sm">九神（ahr999）关于比特币囤币理念的经典文章，囤币者必读</p>
+                                        <a href="book/囤比特币_ahr999.pdf" target="_blank" class="inline-flex items-center text-primary hover:underline text-sm">
+                                            阅读PDF <i class="fa fa-external-link ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start">
+                                    <i class="fa fa-road text-primary text-2xl mt-1 mr-4"></i>
+                                    <div>
+                                        <h4 class="font-medium mb-2">通往比特币之路</h4>
+                                        <p class="text-gray-600 mb-3 text-sm">深入浅出地介绍比特币的发展历程、技术原理和投资理念</p>
+                                        <a href="book/通往比特币之路.pdf" target="_blank" class="inline-flex items-center text-primary hover:underline text-sm">
+                                            阅读PDF <i class="fa fa-external-link ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">技术基础概念清单</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <div>
+                                    <span class="font-medium">区块链</span>
+                                    <p class="text-gray-600 text-sm">一种分布式账本技术，所有交易记录公开透明且不可篡改</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <div>
+                                    <span class="font-medium">去中心化</span>
+                                    <p class="text-gray-600 text-sm">没有中央机构控制，由全球节点共同维护网络安全</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <div>
+                                    <span class="font-medium">总量限制</span>
+                                    <p class="text-gray-600 text-sm">比特币总量固定为2100万枚，目前已挖出超过1970万枚</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <div>
+                                    <span class="font-medium">挖矿与减半</span>
+                                    <p class="text-gray-600 text-sm">每10分钟左右产生新的比特币，每4年产量减半，目前区块奖励为3.125 BTC（2024年4月减半后）</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <div>
+                                    <span class="font-medium">私钥与公钥</span>
+                                    <p class="text-gray-600 text-sm">公钥类似银行账号，私钥是访问资金的唯一密码，必须妥善保管</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <div>
+                                    <span class="font-medium">交易确认</span>
+                                    <p class="text-gray-600 text-sm">一笔比特币交易需要被网络节点确认，通常6个确认后视为安全</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- 2. 试着购买 -->
+                <section id="purchase" class="mb-20 section-fade">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold mr-4">2</div>
+                        <h2 class="text-3xl font-bold text-dark">试着购买</h2>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">交易所注册与使用</h3>
+                        <p class="text-gray-600 mb-6">选择合规的交易所是购买比特币的第一步，以下是常用平台：</p>
+                        
+                        <div class="grid md:grid-cols-2 gap-4 mb-6">
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-shopping-cart text-primary mr-2"></i>
+                                    <h4 class="font-medium">币安 (Binance)</h4>
+                                </div>
+                                <ul class="text-sm text-gray-600 space-y-2 mb-3">
+                                    <li>• 全球最大交易量的交易所</li>
+                                    <li>• 支持多种法币购买</li>
+                                    <li>• 新手友好的界面</li>
+                                </ul>
+                                <a href="https://www.maxweb.academy/referral/earn-together/refer-in-hotsummer/claim?hl=zh-CN&ref=GRO_20338_1P31V&utm_source=default" target="_blank" class="text-primary text-sm hover:underline">注册币安</a>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-exchange text-primary mr-2"></i>
+                                    <h4 class="font-medium">欧易 (OKX)</h4>
+                                </div>
+                                <ul class="text-sm text-gray-600 space-y-2 mb-3">
+                                    <li>• 老牌交易所，安全性高</li>
+                                    <li>• 丰富的交易对</li>
+                                    <li>• 提供简单的购买流程</li>
+                                </ul>
+                                <a href="https://www.xacncf.com/join/2160255" target="_blank" class="text-primary text-sm hover:underline">注册欧易</a>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+                            <h4 class="font-medium text-blue-800 mb-2">注册与购买步骤</h4>
+                            <ol class="list-decimal list-inside text-blue-700 space-y-2 text-sm">
+                                <li>使用邮箱/手机号注册账号</li>
+                                <li>完成实名认证(KYC)，上传身份证</li>
+                                <li>绑定银行卡或支付宝/微信</li>
+                                <li>在"法币交易"区选择"比特币(BTC)"</li>
+                                <li>输入购买金额，确认订单并支付</li>
+                                <li>购买完成后，在"资产"中查看你的比特币</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">提币到自己的钱包</h3>
+                        <p class="text-gray-600 mb-4">当你在交易所积累了一定数量的比特币后，建议转移到自己控制的钱包中，提高安全性。</p>
+                        
+                        <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded mb-4">
+                            <div class="flex">
+                                <i class="fa fa-lightbulb-o text-amber-500 mt-1 mr-3 text-xl"></i>
+                                <p class="text-amber-800 text-sm">提示：一般建议当比特币价值超过一定数额（如5000元）时，就应该考虑提币到个人钱包，而不是长期存放在交易所。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center p-4 border-2 border-dashed border-gray-300 rounded-lg">
+                            <i class="fa fa-arrow-circle-right text-primary text-3xl mb-3"></i>
+                            <p class="text-gray-500">提币操作将在"囤币开始"部分详细介绍</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. 囤币开始 -->
+                <section id="hoarding" class="mb-20 section-fade">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold mr-4">3</div>
+                        <h2 class="text-3xl font-bold text-dark">囤币开始</h2>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">比特币钱包基础概念</h3>
+                        <p class="text-gray-600 mb-4">比特币钱包是存储、发送和接收比特币的工具，它实际上并不存储比特币本身，而是存储你的私钥。</p>
+                        
+                        <div class="grid md:grid-cols-3 gap-4 mb-4">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-medium mb-2 text-primary">硬件钱包</h4>
+                                <p class="text-sm text-gray-600">如Ledger、Trezor，私钥存储在离线设备中，安全性最高，适合大额存储</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-medium mb-2 text-primary">软件钱包</h4>
+                                <p class="text-sm text-gray-600"><strong>imToken（推荐）</strong>、比特派，等其他桌面钱包，使用方便，适合小额存储</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-medium mb-2 text-primary">移动设备</h4>
+                                <p class="text-sm text-gray-600">推荐使用<strong>苹果手机</strong>，iOS系统安全性更高，App Store审核严格，能有效避免恶意钱包应用</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">私钥/助记词的重要性</h3>
+                        
+                        <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded mb-6">
+                            <div class="flex">
+                                <i class="fa fa-exclamation-triangle text-red-500 mt-1 mr-3"></i>
+                                <div>
+                                    <h4 class="font-medium text-red-800 mb-1">重要警告</h4>
+                                    <p class="text-red-700 text-sm">私钥/助记词是访问你比特币的唯一凭证，谁拥有它们，谁就拥有你的比特币。永远不要向任何人透露，包括平台客服！</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="font-medium mb-3">如何安全保管私钥/助记词：</h4>
+                        <ul class="space-y-3 mb-4">
+                            <li class="flex items-start">
+                                <i class="fa fa-lock text-green-500 mt-1 mr-3"></i>
+                                <p class="text-gray-600">用无碳笔手写在纸质载体上（不要打印或拍照）</p>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-lock text-green-500 mt-1 mr-3"></i>
+                                <p class="text-gray-600">至少备份两份，存放在不同的安全地点（如家中保险柜和银行保险箱）</p>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-lock text-green-500 mt-1 mr-3"></i>
+                                <p class="text-gray-600">避免存储在电脑、手机或云存储中，防止被黑客窃取</p>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-lock text-green-500 mt-1 mr-3"></i>
+                                <p class="text-gray-600">定期检查备份是否完好，如有损坏及时重新备份</p>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">导入/恢复钱包</h3>
+                        <p class="text-gray-600 mb-4">当你更换钱包设备或钱包丢失时，可以通过助记词恢复你的比特币资产：</p>
+                        
+                        <ol class="list-decimal list-inside space-y-3 mb-4">
+                            <li class="text-gray-700">在新钱包中选择"恢复钱包"或"导入钱包"</li>
+                            <li class="text-gray-700">选择助记词（Mnemonic）恢复方式</li>
+                            <li class="text-gray-700">按照顺序输入你的12/24个助记词（注意顺序不能错）</li>
+                            <li class="text-gray-700">设置钱包密码（用于保护当前设备上的钱包访问）</li>
+                            <li class="text-gray-700">完成恢复，等待钱包同步区块链数据</li>
+                        </ol>
+                        
+                        <div class="bg-blue-50 p-3 rounded text-sm text-blue-700">
+                            <i class="fa fa-info-circle mr-2"></i>
+                            提示：恢复钱包时，确保在安全的网络环境下操作，并且设备未被植入恶意软件。
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">从交易所提币</h3>
+                        <p class="text-gray-600 mb-4">将比特币从交易所转移到个人钱包的步骤：</p>
+                        
+                        <div class="space-y-4 mb-6">
+                            <div class="flex">
+                                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold flex-shrink-0 mr-3">1</div>
+                                <div>
+                                    <h4 class="font-medium">在你的钱包中获取接收地址</h4>
+                                    <p class="text-sm text-gray-600">打开钱包，进入比特币页面，点击"接收"，复制生成的比特币地址（通常以bc1或1开头）</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex">
+                                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold flex-shrink-0 mr-3">2</div>
+                                <div>
+                                    <h4 class="font-medium">在交易所发起提币</h4>
+                                    <p class="text-sm text-gray-600">进入交易所的"资产"页面，找到比特币，点击"提币"，粘贴你从钱包复制的地址</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex">
+                                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold flex-shrink-0 mr-3">3</div>
+                                <div>
+                                    <h4 class="font-medium">确认提币信息并提交</h4>
+                                    <p class="text-sm text-gray-600">输入提币数量，选择网络（必须选择Bitcoin网络），完成安全验证（短信/谷歌验证）</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex">
+                                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold flex-shrink-0 mr-3">4</div>
+                                <div>
+                                    <h4 class="font-medium">等待区块链确认</h4>
+                                    <p class="text-sm text-gray-600">提币申请通过后，等待区块链确认（通常需要10-60分钟），确认后资产将显示在你的钱包中</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-red-50 p-3 rounded text-sm text-red-700">
+                            <i class="fa fa-exclamation-circle mr-2"></i>
+                            重要：提币地址务必反复核对，确保正确无误！一旦提币到错误地址，资产将无法找回。
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">比特币转账演示</h3>
+                        <p class="text-gray-600 mb-6">试着向以下地址转账少量比特币，熟悉转账流程：</p>
+                        
+                        <div class="flex flex-col md:flex-row gap-6 items-center justify-center mb-6">
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <div class="text-center mb-3">
+                                    <span class="inline-block px-3 py-1 bg-primary/10 text-primary text-sm rounded-full mb-2">钱包地址</span>
+                                    <div class="font-mono text-sm bg-white p-3 rounded break-all max-w-xs">
+                                        3KLy733p6vQDyaKdEY61iGdQPf9pYt9hPv
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <div class="text-center">
+                                    <span class="inline-block px-3 py-1 bg-primary/10 text-primary text-sm rounded-full mb-2">二维码</span>
+                                    <div class="bg-white p-3 rounded">
+                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=128x128&data=3KLy733p6vQDyaKdEY61iGdQPf9pYt9hPv" alt="比特币地址二维码" class="w-32 h-32 mx-auto">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="font-medium mb-3">基本注意事项：</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-3"></i>
+                                <p>转账前确认接收地址正确无误</p>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-3"></i>
+                                <p>设置合适的矿工费，费用越高，转账确认速度越快</p>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-3"></i>
+                                <p>比特币转账不可逆，一旦确认无法撤回</p>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-3"></i>
+                                <p>每次转账后，保存交易ID（TXID）以便查询进度</p>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- 查询比特币地址 -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 mt-8">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary flex items-center">
+                            <i class="fa fa-search text-blue-600 mr-2"></i>
+                            查询比特币地址
+                        </h3>
+                        <p class="text-gray-600 mb-4">输入任意比特币地址，查看该地址的交易历史、余额等详细信息。</p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <div class="flex-1">
+                                <input 
+                                    type="text" 
+                                    id="btcAddressInput" 
+                                    placeholder="请输入比特币地址 (如: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa)" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                                >
+                            </div>
+                            <button 
+                                onclick="queryBitcoinAddress()" 
+                                class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center"
+                            >
+                                <i class="fa fa-search mr-2"></i>
+                                查询地址
+                            </button>
+                        </div>
+                        
+                        <div class="mt-4 text-sm text-gray-500">
+                            <i class="fa fa-info-circle mr-1"></i>
+                            查询结果将在新窗口中打开，使用 Blockchair 区块链浏览器
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. 学着定投 -->
+                <section id="定投" class="mb-20 section-fade">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold mr-4">4</div>
+                        <h2 class="text-3xl font-bold text-dark">学着定投</h2>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">AHR999指数定投</h3>
+                        <p class="text-gray-600 mb-4">AHR999指数是一个帮助判断比特币定投时机的工具，由两个指标组成：比特币价格与200日定投成本的比值，以及比特币价格与200日移动平均线的比值。</p>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                            <h4 class="font-medium mb-2">AHR999指数参考标准：</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• 当指数 <strong class="text-green-600">&lt; 0.45</strong>：严重低估，适合加大定投金额</li>
+                                <li>• 当指数 <strong class="text-blue-600">0.45-1.2</strong>：合理估值，正常定投</li>
+                                <li>• 当指数 <strong class="text-orange-600">1.2-5</strong>：高估，可减少定投金额或暂停</li>
+                                <li>• 当指数 <strong class="text-red-600">&gt; 5</strong>：严重高估，考虑停止定投</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="text-center">
+                            <a href="ahr999.html" target="_blank" class="inline-flex items-center bg-primary/10 text-primary px-4 py-2 rounded-full hover:bg-primary/20 transition-colors">
+                                查看实时AHR999指数 <i class="fa fa-external-link ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">了解比特币周期</h3>
+                        <p class="text-gray-600 mb-4">比特币存在大约4年一次的周期，与挖矿奖励减半事件密切相关，了解周期有助于制定更合理的定投策略。</p>
+                        
+                        <div class="mb-6">
+                            <canvas id="bitcoinCycleChart" height="250"></canvas>
+                            <div class="mt-3 p-3 bg-green-50 border-l-4 border-green-400 rounded-r">
+                                <div class="flex items-center">
+                                    <i class="fa fa-lightbulb-o text-green-600 mr-2"></i>
+                                    <span class="font-medium text-green-800">小吴乐意个人预测</span>
+                                </div>
+                                <p class="text-sm text-green-700 mt-1">
+                                    本轮2025年比特币牛市高点预测至少达到 <strong>$180,000</strong>，
+                                    距离当前价格还有 <strong>$71,720</strong> 的上涨空间 (+66.2%)
+                                </p>
+                                <p class="text-xs text-green-600 mt-1">
+                                    *此为个人观点，仅供参考，投资有风险，请谨慎决策
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-gray-50 p-3 rounded">
+                                <h4 class="font-medium text-primary mb-1">历史减半时间</h4>
+                                <ul class="text-gray-600 space-y-1">
+                                    <li>• 第一次：2012年11月，奖励从50 BTC减为25 BTC</li>
+                                    <li>• 第二次：2016年7月，奖励从25 BTC减为12.5 BTC</li>
+                                    <li>• 第三次：2020年5月，奖励从12.5 BTC减为6.25 BTC</li>
+                                    <li>• 第四次：2024年4月，奖励从6.25 BTC减为3.125 BTC</li>
+                                    <li>• 第五次：预计2028年，奖励将减为1.5625 BTC</li>
+                                </ul>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded">
+                                <h4 class="font-medium text-primary mb-1">周期特点</h4>
+                                <ul class="text-gray-600 space-y-1">
+                                    <li>• 减半前：通常会有一波上涨</li>
+                                    <li>• 减半后1-2年：往往出现历史新高</li>
+                                    <li>• 新高后：会经历较长时间的调整期</li>
+                                    <li>• 整个周期：价格呈现螺旋式上升</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-xl font-semibold mb-4 text-secondary">分批定投，养成习惯</h3>
+                        <p class="text-gray-600 mb-4">定投的核心是通过分散购买时间来降低市场波动风险，以下是一些实用建议：</p>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0 mr-3">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">选择固定周期</h4>
+                                    <p class="text-sm text-gray-600">可以选择每周、每双周或每月固定一天进行定投，养成习惯后更容易坚持</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0 mr-3">
+                                    <i class="fa fa-money"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">确定合理金额</h4>
+                                    <p class="text-sm text-gray-600">根据自身财务状况，选择每月可支配收入的5%-10%作为定投金额，不影响正常生活</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0 mr-3">
+                                    <i class="fa fa-line-chart"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">逆向定投策略</h4>
+                                    <p class="text-sm text-gray-600">市场下跌时可适当增加定投金额，上涨时可减少，最大化降低平均成本</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0 mr-3">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">长期坚持</h4>
+                                    <p class="text-sm text-gray-600">至少坚持一个完整周期（4年）以上，避免因短期波动而放弃，时间是定投的朋友</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. 比特币网站导航 -->
+                <section id="navigation" class="mb-20 section-fade">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold mr-4">5</div>
+                        <h2 class="text-3xl font-bold text-dark">比特币网站导航</h2>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                        <p class="text-gray-600 mb-6">精选的比特币相关网站，涵盖数据分析、学习资源、工具应用等各个方面，帮助你更好地了解和使用比特币。</p>
+                        
+                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-bar-chart text-blue-600 text-xl mr-3"></i>
+                                    <h3 class="font-semibold text-lg">BitInfoCharts</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">比特币统计数据和图表分析，包含网络算力、交易费用、地址数量等详细数据。</p>
+                                <a href="https://bitinfocharts.com/zh/bitcoin" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm">
+                                    访问网站 <i class="fa fa-external-link ml-1"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-line-chart text-green-600 text-xl mr-3"></i>
+                                    <h3 class="font-semibold text-lg">CoinGlass</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">专业的合约数据和市场深度分析平台，提供爆仓数据、资金费率等信息。</p>
+                                <a href="https://www.coinglass.com/zh" target="_blank" class="inline-flex items-center text-green-600 hover:text-green-800 text-sm">
+                                    访问网站 <i class="fa fa-external-link ml-1"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-book text-purple-600 text-xl mr-3"></i>
+                                    <h3 class="font-semibold text-lg">BTC Study</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">比特币技术学习和研究资源，包含技术文档、研究报告等专业内容。</p>
+                                <a href="https://www.btcstudy.org" target="_blank" class="inline-flex items-center text-purple-600 hover:text-purple-800 text-sm">
+                                    访问网站 <i class="fa fa-external-link ml-1"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-wrench text-orange-600 text-xl mr-3"></i>
+                                    <h3 class="font-semibold text-lg">预测牛市价格</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">预测2025年比特币本轮牛市的最高价格是多少。</p>
+                                <a href="https://ycbtc.btchao.com" target="_blank" class="inline-flex items-center text-orange-600 hover:text-orange-800 text-sm">
+                                    访问网站 <i class="fa fa-external-link ml-1"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-file-text text-red-600 text-xl mr-3"></i>
+                                    <h3 class="font-semibold text-lg">BIPs</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">比特币改进提案官方文档，了解比特币协议的最新发展和技术改进。</p>
+                                <a href="https://bips.btchao.com" target="_blank" class="inline-flex items-center text-red-600 hover:text-red-800 text-sm">
+                                    访问网站 <i class="fa fa-external-link ml-1"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-3">
+                                    <i class="fa fa-flask text-teal-600 text-xl mr-3"></i>
+                                    <h3 class="font-semibold text-lg">Buy Test</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">比特币相关测试和验证工具，帮助用户测试各种比特币功能和服务。</p>
+                                <a href="https://buytest.btchao.com" target="_blank" class="inline-flex items-center text-teal-600 hover:text-teal-800 text-sm">
+                                    访问网站 <i class="fa fa-external-link ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. 享受生活 -->
+                <section id="life" class="mb-12 section-fade">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold mr-4">6</div>
+                        <h2 class="text-3xl font-bold text-dark">享受生活</h2>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                        <div class="text-center mb-6">
+                            <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                                <i class="fa fa-smile-o text-primary text-4xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-secondary mb-2">囤币是为了更好地生活</h3>
+                            <p class="text-gray-600 max-w-lg mx-auto">不要让加密货币占据你全部的注意力，保持平衡的生活方式才是最重要的</p>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6 mb-8">
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0 mr-3">
+                                        <i class="fa fa-bed"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-1">好好睡觉</h4>
+                                        <p class="text-sm text-gray-600">保证充足的睡眠，不要因为盯盘而熬夜。比特币市场24小时运转，但你的身体需要休息。设定固定的作息时间，避免深夜查看价格。</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0 mr-3">
+                                        <i class="fa fa-balance-scale"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-1">平衡生活工作</h4>
+                                        <p class="text-sm text-gray-600">投资只是生活的一部分，不要让它影响你的工作效率和人际关系。专注于本职工作，稳定的收入来源是持续定投的基础。</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0 mr-3">
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-1">调整好心态</h4>
+                                        <p class="text-sm text-gray-600">接受价格波动是正常的，不要因为短期涨跌而情绪起伏。培养长期思维，相信时间的力量。记住：你投资的是未来，不是今天的价格。</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 flex-shrink-0 mr-3">
+                                        <i class="fa fa-users"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-1">维护人际关系</h4>
+                                        <p class="text-sm text-gray-600">不要总是和朋友谈论比特币，保持话题的多样性。投资理念因人而异，尊重他人的选择，避免强行"传教"。</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 flex-shrink-0 mr-3">
+                                        <i class="fa fa-gamepad"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-1">培养兴趣爱好</h4>
+                                        <p class="text-sm text-gray-600">发展除投资外的兴趣爱好，如运动、阅读、旅行等。这些活动不仅能让你放松心情，还能帮你在市场波动时保持冷静。</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 flex-shrink-0 mr-3">
+                                        <i class="fa fa-graduation-cap"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-1">持续学习成长</h4>
+                                        <p class="text-sm text-gray-600">除了学习投资知识，也要关注个人技能提升和职业发展。多元化的知识结构会让你在面对不确定性时更有底气。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-lg text-center">
+                            <h4 class="font-medium text-lg mb-2">记住：财富自由的目标是更好的生活</h4>
+                            <p class="text-gray-600 text-sm">不要为了囤币而牺牲当下的幸福，合理规划，享受过程，让投资成为生活的助力而非负担。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+                        <div class="mb-6">
+                            <h4 class="font-medium text-lg mb-4">关注小吴乐意，获取更多投资与生活智慧</h4>
+                            <div class="space-y-3 max-w-md mx-auto">
+                                <div class="flex items-center justify-center space-x-3 p-3 bg-green-50 rounded-lg">
+                                    <i class="fa fa-wechat text-green-600 text-xl"></i>
+                                    <div class="text-left">
+                                        <div class="font-medium text-green-800">关注公众号</div>
+                                        <div class="text-sm text-green-600">小吴乐意</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-center space-x-3 p-3 bg-blue-50 rounded-lg">
+                                    <i class="fa fa-home text-blue-600 text-xl"></i>
+                                    <div class="text-left">
+                                        <div class="font-medium text-blue-800">个人主页</div>
+                                        <a href="https://www.xiaowuleyi.com" target="_blank" class="text-sm text-blue-600 hover:underline">www.xiaowuleyi.com</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-center space-x-3 p-3 bg-purple-50 rounded-lg">
+                                    <i class="fa fa-comments text-purple-600 text-xl"></i>
+                                    <div class="text-left">
+                                        <div class="font-medium text-purple-800">个人碎碎念</div>
+                                        <a href="https://wb.xiaowuleyi.com" target="_blank" class="text-sm text-purple-600 hover:underline">wb.xiaowuleyi.com</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                    <div class="flex items-center mb-6 md:mb-0">
+                        <i class="fa fa-bitcoin text-primary text-3xl mr-3"></i>
+                        <h2 class="text-2xl font-bold">比特币囤币入门</h2>
+                    </div>
+                    <div class="flex space-x-6">
+                        <a href="#concepts" class="hover:text-primary transition-colors">基础概念</a>
+                        <a href="#purchase" class="hover:text-primary transition-colors">试着购买</a>
+                        <a href="#hoarding" class="hover:text-primary transition-colors">囤币开始</a>
+                        <a href="#定投" class="hover:text-primary transition-colors">学着定投</a>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-700 pt-8 text-center text-gray-400 text-sm">
+                    <p class="mb-4">本网站仅提供比特币知识学习，不构成任何投资建议</p>
+                    <p>比特币投资有风险，入市需谨慎 | © 2025 比特币囤币指南</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary/90">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // 移动端菜单切换
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 滚动显示动画
+        function checkSectionVisibility() {
+            const sections = document.querySelectorAll('.section-fade');
+            const triggerBottom = window.innerHeight * 0.8;
+
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < triggerBottom) {
+                    section.classList.add('section-visible');
+                }
+            });
+        }
+
+        // 导航栏激活状态
+        function updateNavActive() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= (sectionTop - 150)) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('nav-active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('nav-active');
+                }
+            });
+        }
+
+        // 返回顶部按钮
+        function toggleBackToTop() {
+            const backToTopButton = document.getElementById('back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        }
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // 关闭移动端菜单
+                document.getElementById('mobile-menu').classList.add('hidden');
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // 返回顶部功能
+        document.getElementById('back-to-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 比特币周期图表
+        function initChart() {
+            const ctx = document.getElementById('bitcoinCycleChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2025预测'],
+                    datasets: [{
+                        label: '比特币价格 (USD)',
+                        data: [3, 13, 1163, 320, 217, 660, 19783, 3750, 10200, 29000, 68789, 16547, 30000, 73750, 108280, null],
+                        borderColor: '#F7931A',
+                        backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#F7931A',
+                        pointRadius: 3,
+                        pointHoverRadius: 5
+                    }, {
+                        label: '小吴乐意预测 - 牛市高点',
+                        data: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, 108280, 180000],
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderDash: [5, 5],
+                        fill: false,
+                        tension: 0.4,
+                        pointBackgroundColor: '#10B981',
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 0) {
+                                        return `当前价格: $${context.parsed.y?.toLocaleString()}`;
+                                    } else if (context.datasetIndex === 1) {
+                                        const currentPrice = 108280;
+                                        const predictedPrice = 180000;
+                                        const gap = predictedPrice - currentPrice;
+                                        const percentage = ((predictedPrice - currentPrice) / currentPrice * 100).toFixed(1);
+                                        return [
+                                            `预测高点: $${context.parsed.y?.toLocaleString()}`,
+                                            `距离预测: $${gap.toLocaleString()} (+${percentage}%)`
+                                        ];
+                                    }
+                                }
+                            }
+                        },
+                        annotation: {
+                            annotations: {
+                                line1: {
+                                    type: 'line',
+                                    yMin: 0,
+                                    yMax: 0,
+                                    borderColor: 'rgb(255, 99, 132)',
+                                    borderWidth: 2,
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'logarithmic',
+                            title: {
+                                display: true,
+                                text: '价格 (USD, 对数 scale)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 初始化
+        window.addEventListener('load', function() {
+            checkSectionVisibility();
+            updateNavActive();
+            toggleBackToTop();
+            initChart();
+        });
+
+        // 滚动事件监听
+        window.addEventListener('scroll', function() {
+            checkSectionVisibility();
+            updateNavActive();
+            toggleBackToTop();
+        });
+
+        // 查询比特币地址功能
+        function queryBitcoinAddress() {
+            const addressInput = document.getElementById('btcAddressInput');
+            const address = addressInput.value.trim();
+            
+            if (!address) {
+                alert('请输入比特币地址');
+                return;
+            }
+            
+            // 简单的比特币地址格式验证
+            const btcAddressRegex = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/;
+            if (!btcAddressRegex.test(address)) {
+                alert('请输入有效的比特币地址格式');
+                return;
+            }
+            
+            // 构建Blockchair查询URL
+            const queryUrl = `https://blockchair.com/zh/bitcoin/address/${address}`;
+            
+            // 在新窗口中打开查询结果
+            window.open(queryUrl, '_blank');
+            
+            // 清空输入框
+            addressInput.value = '';
+        }
+
+        // 支持回车键查询
+        document.getElementById('btcAddressInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                queryBitcoinAddress();
+            }
+        });
+    </script>
+</body>
+</html>

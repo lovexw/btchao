@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比特币白皮书：一种点对点的电子现金系统 | 中文版</title>
+    <meta name="description" content="中本聪比特币白皮书中文完整版，详细解读点对点电子现金系统的技术原理、工作量证明、交易机制等核心概念。">
+    <meta name="keywords" content="比特币白皮书,中本聪,点对点,电子现金,工作量证明,区块链,数字签名">
+    <meta name="author" content="中本聪 (Satoshi Nakamoto)">
+    <meta property="og:title" content="比特币白皮书：一种点对点的电子现金系统 | 中文版">
+    <meta property="og:description" content="中本聪比特币白皮书中文完整版，详细解读点对点电子现金系统的技术原理。">
+    <meta name="robots" content="index, follow">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2726670321929378"
+         crossorigin="anonymous"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#F7931A',
+                        secondary: '#1E3A8A',
+                        dark: '#0F172A',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['"Microsoft YaHei"', '"PingFang SC"', '"Hiragino Sans GB"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+                        serif: ['Georgia', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", Arial, sans-serif;
+                letter-spacing: 0.02em;
+            }
+            p, div, span {
+                letter-spacing: 0.02em;
+                line-height: 1.8;
+            }
+        }
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .section-fade {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            }
+            .section-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .nav-active {
+                border-left: 3px solid theme('colors.primary');
+                padding-left: 0.75rem;
+                color: theme('colors.primary');
+            }
+            .concept-box {
+                background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                border-left: 4px solid theme('colors.primary');
+            }
+            .content-text {
+                letter-spacing: 0.02em;
+                line-height: 1.8;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-serif leading-relaxed text-lg">
+    <!-- 导航栏 -->
+    <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-sm z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+                    <i class="fa fa-arrow-left text-primary"></i>
+                    <span class="text-sm text-gray-600">返回首页</span>
+                </a>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-bitcoin text-primary text-2xl"></i>
+                <h1 class="text-lg font-bold text-dark">比特币白皮书</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="font-size-btn" class="text-gray-600 hover:text-primary transition-colors" title="调整字体大小">
+                    <i class="fa fa-text-height"></i>
+                </button>
+                <button id="print-btn" class="text-gray-600 hover:text-primary transition-colors" title="打印">
+                    <i class="fa fa-print"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="pt-20 pb-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <!-- 标题区 -->
+                <div class="text-center mb-12 section-fade">
+                    <h1 class="text-4xl md:text-5xl font-bold text-dark mb-4 text-shadow">
+                        比特币：一种点对点的电子现金系统
+                    </h1>
+                    <div class="text-lg text-gray-600 mb-6 content-text">
+                        <p class="mb-2">中本聪（Satoshi Nakamoto）</p>
+                        <p class="mb-1">邮箱：<a href="mailto:satoshin@gmx.com" class="text-primary hover:underline">satoshin@gmx.com</a></p>
+                        <p>网址：<a href="http://www.bitcoin.org" class="text-primary hover:underline" target="_blank">www.bitcoin.org</a></p>
+                    </div>
+                    <div class="inline-flex items-center bg-primary/10 text-primary px-4 py-2 rounded-full text-sm">
+                        <i class="fa fa-calendar mr-2"></i>
+                        2008年10月31日发布
+                    </div>
+                </div>
+
+                <!-- 目录 -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-8 section-fade">
+                    <h2 class="text-xl font-semibold mb-4 text-secondary flex items-center">
+                        <i class="fa fa-list mr-2"></i>目录
+                    </h2>
+                    <div class="grid md:grid-cols-2 gap-2 text-sm">
+                        <a href="#abstract" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">摘要</a>
+                        <a href="#introduction" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">1. 引言</a>
+                        <a href="#transactions" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">2. 交易</a>
+                        <a href="#timestamp-server" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">3. 时间戳服务器</a>
+                        <a href="#proof-of-work" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">4. 工作量证明</a>
+                        <a href="#network" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">5. 网络</a>
+                        <a href="#incentive" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">6. 激励</a>
+                        <a href="#reclaiming-disk-space" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">7. 回收磁盘空间</a>
+                        <a href="#simplified-payment-verification" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">8. 简化支付验证</a>
+                        <a href="#combining-splitting-value" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">9. 合并与拆分价值</a>
+                        <a href="#privacy" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">10. 隐私</a>
+                        <a href="#calculations" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">11. 计算</a>
+                        <a href="#conclusion" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">12. 结论</a>
+                        <a href="#references" class="block py-2 px-3 rounded hover:bg-gray-50 transition-colors">参考文献</a>
+                    </div>
+                </div>
+
+                <!-- 摘要 -->
+                <section id="abstract" class="bg-white rounded-xl shadow-sm p-8 mb-8 section-fade">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        <i class="fa fa-file-text-o text-primary mr-3"></i>摘要
+                    </h2>
+                    <div class="prose prose-lg max-w-none">
+                        <p class="text-gray-700 leading-relaxed mb-6 content-text">
+                            纯点对点的电子现金版本，可让在线支付直接从一方发送到另一方，无需通过金融机构。数字签名为解决方案提供了部分支持，但如果仍需依赖可信第三方来防止双花，其主要优势便会丧失。我们提出一种基于点对点网络的双花问题解决方案：网络通过将交易哈希到一条持续延伸的、基于哈希的工作量证明链中，为交易添加时间戳，形成一份"若不重新完成工作量证明，就无法篡改"的记录。最长链不仅能证明所见证事件的先后顺序，还能证明其源自最大的算力池。只要控制多数算力的节点不串通攻击网络，它们就会生成最长链，从而超越攻击者的链条。该网络的结构需求极低：消息以"尽力而为"的方式广播，节点可随意退出或重新加入网络，只需将最长的工作量证明链视为自身离线期间发生事件的凭证即可。
+                        </p>
+                    </div>
+
+                    <!-- 技术概念补充 -->
+                    <div class="concept-box p-6 rounded-lg mt-6">
+                        <h3 class="text-lg font-semibold text-secondary mb-4 flex items-center">
+                            <i class="fa fa-lightbulb-o text-primary mr-2"></i>技术概念补充
+                        </h3>
+                        <div class="space-y-4 text-sm">
+                            <div class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                <div>
+                                    <strong class="text-secondary">点对点（Peer-to-Peer，P2P）</strong>：指网络中每个节点（如用户的电脑/设备）地位平等，无需通过中央服务器中转，直接互相通信。比如两人面对面现金交易，无需银行参与；而微信转账需经过腾讯服务器，不属于纯P2P。
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                <div>
+                                    <strong class="text-secondary">数字签名（Digital Signature）</strong>：一种密码学技术，类似"电子盖章"。用户拥有"私钥"（类似钥匙）和"公钥"（类似锁孔），用私钥对交易签名后，他人可通过公钥验证签名真实性，确保交易是本人发起、未被篡改。
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                <div>
+                                    <strong class="text-secondary">双花（Double-Spending）</strong>：指同一笔数字资产被重复花费。比如你有1个比特币，既转给A又转给B——由于数字文件可复制，若没有防护，可能出现"一笔钱花两次"。
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                <div>
+                                    <strong class="text-secondary">哈希（Hash）</strong>：一种密码学函数，能将任意长度的数据转化为固定长度的乱码字符串。特点是：①输入改1个字符，哈希值会完全变化；②无法从哈希值反推原数据。
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                <div>
+                                    <strong class="text-secondary">工作量证明（Proof-of-Work，PoW）</strong>：一种"需要消耗算力才能完成"的数学题，解题过程即"挖矿"。矿工需反复调整区块中的"随机数（nonce）"计算哈希，直到找到符合条件的数值。
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="inline-block w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                <div>
+                                    <strong class="text-secondary">算力（CPU Power）</strong>：指节点的计算能力（每秒能算多少次哈希），是比特币网络的"投票权"——算力越强，生成区块、维护最长链的概率越高。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1. 引言 -->
+                <section id="introduction" class="bg-white rounded-xl shadow-sm p-8 mb-8 section-fade">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        <span class="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-bold mr-3">1</span>
+                        引言
+                    </h2>
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        <p class="mb-4">
+                            互联网商业几乎完全依赖金融机构作为可信第三方来处理电子支付。尽管该系统对多数交易而言运转良好，但仍受制于"基于信任的模型"固有的缺陷：
+                        </p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-start">
+                                <i class="fa fa-exclamation-circle text-orange-500 mt-1 mr-3"></i>
+                                完全不可逆转的交易无法实现，因为金融机构难免要调解纠纷（如买家申请退款）；
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-exclamation-circle text-orange-500 mt-1 mr-3"></i>
+                                调解成本会增加交易费用，既限制了"最小实际交易金额"，也排除了"小额临时交易"的可能性；
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-exclamation-circle text-orange-500 mt-1 mr-3"></i>
+                                对于"不可逆服务"，无法进行"不可逆支付"，导致信任需求扩散。
+                            </li>
+                        </ul>
+                        <p class="mb-4">
+                            线下使用实物现金可避免这些成本和支付不确定性，但在通信渠道上，尚无无需可信第三方的支付机制。
+                        </p>
+                        <p class="mb-6">
+                            我们需要一种基于"密码学证明"而非"信任"的电子支付系统：让任意两个自愿交易的双方直接交互，无需可信第三方。"计算上不可逆转的交易"可保护卖家免受欺诈，而常规的托管机制也能轻松保护买家。本文提出一种解决方案：用点对点分布式时间戳服务器，为交易的时间顺序生成计算证明，只要诚实节点的总算力超过任何串通的攻击节点组，系统就是安全的。
+                        </p>
+                    </div>
+
+                    <div class="concept-box p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold text-secondary mb-4 flex items-center">
+                            <i class="fa fa-lightbulb-o text-primary mr-2"></i>技术概念补充
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <strong class="text-secondary">可信第三方（TTP）</strong>：指双方都信任的中间机构，如银行、支付宝、PayPal。比特币无需这种中间机构。
+                            </div>
+                            <div>
+                                <strong class="text-secondary">不可逆转交易</strong>：指交易完成后无法撤销。比特币交易不可逆，是为了保护卖家——避免买家收到货后撤销转账。
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. 时间戳服务器 -->
+                <section id="timestamp-server" class="bg-white rounded-xl shadow-sm p-8 mb-8 section-fade">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        <span class="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-bold mr-3">3</span>
+                        时间戳服务器
+                    </h2>
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        <p class="mb-4">
+                            我们的解决方案从"时间戳服务器"开始。时间戳服务器的工作原理是：对"需加时间戳的一组数据块"计算哈希值，然后广泛发布该哈希值（例如发布到报纸或Usenet帖子中）。时间戳的核心作用是"证明数据在该时间点已存在"——因为只有数据存在，才能算出对应的哈希值。
+                        </p>
+                        <p class="mb-6">
+                            更关键的是：每个时间戳的哈希值中，都会包含"前一个时间戳的哈希值"，从而形成一条链条。每新增一个时间戳，都会强化之前所有时间戳的可信度（若要篡改某旧时间戳，需同时篡改后续所有时间戳的哈希，难度极大）。
+                        </p>
+                        
+                        <div class="bg-white p-6 rounded-lg mb-6 border border-gray-200">
+                            <h4 class="text-center text-sm font-medium text-gray-700 mb-4">图2：时间戳服务器</h4>
+                            <div class="flex justify-center">
+                                <svg width="500" height="200" viewBox="0 0 500 200" class="max-w-full h-auto">
+                                    <!-- Block 1 -->
+                                    <g transform="translate(20, 50)">
+                                        <rect x="0" y="0" width="100" height="60" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" rx="5"/>
+                                        <text x="50" y="20" text-anchor="middle" class="text-xs font-medium">Item</text>
+                                        <text x="50" y="35" text-anchor="middle" class="text-xs font-medium">Item</text>
+                                        <text x="50" y="50" text-anchor="middle" class="text-xs font-medium">...</text>
+                                    </g>
+                                    
+                                    <!-- Hash 1 -->
+                                    <g transform="translate(20, 120)">
+                                        <rect x="0" y="0" width="100" height="30" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="3"/>
+                                        <text x="50" y="20" text-anchor="middle" class="text-xs">Hash</text>
+                                    </g>
+                                    
+                                    <!-- Arrow 1 -->
+                                    <path d="M 130 135 L 170 135" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Block 2 -->
+                                    <g transform="translate(180, 50)">
+                                        <rect x="0" y="0" width="100" height="60" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" rx="5"/>
+                                        <text x="50" y="20" text-anchor="middle" class="text-xs font-medium">Item</text>
+                                        <text x="50" y="35" text-anchor="middle" class="text-xs font-medium">Item</text>
+                                        <text x="50" y="50" text-anchor="middle" class="text-xs font-medium">...</text>
+                                    </g>
+                                    
+                                    <!-- Hash 2 -->
+                                    <g transform="translate(180, 120)">
+                                        <rect x="0" y="0" width="100" height="30" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="3"/>
+                                        <text x="50" y="20" text-anchor="middle" class="text-xs">Hash</text>
+                                    </g>
+                                    
+                                    <!-- Arrow 2 -->
+                                    <path d="M 290 135 L 330 135" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Block 3 -->
+                                    <g transform="translate(340, 50)">
+                                        <rect x="0" y="0" width="100" height="60" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" rx="5"/>
+                                        <text x="50" y="20" text-anchor="middle" class="text-xs font-medium">Item</text>
+                                        <text x="50" y="35" text-anchor="middle" class="text-xs font-medium">Item</text>
+                                        <text x="50" y="50" text-anchor="middle" class="text-xs font-medium">...</text>
+                                    </g>
+                                    
+                                    <!-- Hash 3 -->
+                                    <g transform="translate(340, 120)">
+                                        <rect x="0" y="0" width="100" height="30" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="3"/>
+                                        <text x="50" y="20" text-anchor="middle" class="text-xs">Hash</text>
+                                    </g>
+                                    
+                                    <!-- Previous hash indicators -->
+                                    <text x="230" y="145" text-anchor="middle" class="text-xs text-gray-500">包含前一个哈希</text>
+                                    <text x="390" y="145" text-anchor="middle" class="text-xs text-gray-500">包含前一个哈希</text>
+                                    
+                                    <!-- Arrow markers -->
+                                    <defs>
+                                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                            <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <p class="text-sm text-gray-600 text-center mt-4">
+                                时间戳服务器通过对以时间戳形式存在的一组数据实施随机散列而加上时间戳，并将该随机散列进行广播。每个时间戳应当将前一个时间戳纳入其随机散列值中，每一个随后的时间戳都对之前的一个时间戳进行增强，这样就形成了一个链条。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="concept-box p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold text-secondary mb-4 flex items-center">
+                            <i class="fa fa-lightbulb-o text-primary mr-2"></i>技术概念补充
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <strong class="text-secondary">时间戳（Timestamp）</strong>：给数据"盖一个时间章"，证明"该数据在某个时间点已存在"。例：你写了一篇文章，2024年5月1日将文章哈希值发布到论坛，即使后来有人篡改文章内容，你拿出"2024年5月1日的哈希值"，就能证明当时的原文是真实的。
+                            </div>
+                            <div>
+                                <strong class="text-secondary">时间戳链条</strong>：假设块1的哈希是H1，块2的哈希H2中包含H1，块3的哈希H3中包含H2——形成H1→H2→H3的链条。若要篡改块1的数据，块1的哈希会变成H1'，导致H2必须改成包含H1'的H2'，H3也要改成包含H2'的H3'……后续所有块的哈希都要改，成本极高。
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. 工作量证明 -->
+                <section id="proof-of-work" class="bg-white rounded-xl shadow-sm p-8 mb-8 section-fade">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        <span class="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-bold mr-3">4</span>
+                        工作量证明
+                    </h2>
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        <p class="mb-4">
+                            要在点对点网络中实现分布式时间戳服务器，需使用类似亚当·拜克（Adam Back）提出的Hashcash（2002）的工作量证明系统，而非报纸或Usenet帖子。
+                        </p>
+                        <p class="mb-4">
+                            工作量证明的核心是：寻找一个数值（即"随机数nonce"），使得该数值与数据块结合后的哈希值（如用SHA-256算法）满足"开头有指定数量的零比特"。特点是：①解题难度呈指数级增长（开头多1个零，需尝试的nonce数量可能翻倍）；②验证难度极低（只需算一次哈希，看是否符合零比特要求）。
+                        </p>
+                        <p class="mb-6">
+                            在我们的时间戳网络中，工作量证明的实现方式是：矿工不断递增区块中的nonce，直到找到一个数值，使区块的哈希值满足"开头零比特"要求。一旦消耗算力完成工作量证明，该区块就无法篡改——若要改区块数据，需重新计算工作量证明；而若区块后已链接了新区块，还需同时重新计算后续所有区块的工作量证明。
+                        </p>
+                        
+                        <div class="bg-white p-6 rounded-lg mb-6 border border-gray-200">
+                            <h4 class="text-center text-sm font-medium text-gray-700 mb-4">图3：工作量证明</h4>
+                            <div class="flex justify-center">
+                                <svg width="600" height="250" viewBox="0 0 600 250" class="max-w-full h-auto">
+                                    <!-- Block 1 -->
+                                    <g transform="translate(50, 50)">
+                                        <rect x="0" y="0" width="120" height="120" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" rx="5"/>
+                                        <text x="60" y="20" text-anchor="middle" class="text-xs font-bold">Block</text>
+                                        
+                                        <rect x="10" y="30" width="100" height="20" fill="#e0f2fe" stroke="#0284c7" stroke-width="1" rx="2"/>
+                                        <text x="60" y="43" text-anchor="middle" class="text-xs">Prev Hash</text>
+                                        
+                                        <rect x="10" y="55" width="100" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="60" y="68" text-anchor="middle" class="text-xs">Nonce</text>
+                                        
+                                        <rect x="10" y="80" width="100" height="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="1" rx="2"/>
+                                        <text x="60" y="90" text-anchor="middle" class="text-xs">Tx</text>
+                                        <text x="60" y="103" text-anchor="middle" class="text-xs">Tx</text>
+                                    </g>
+                                    
+                                    <!-- Arrow 1 -->
+                                    <path d="M 180 110 L 220 110" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Block 2 -->
+                                    <g transform="translate(230, 50)">
+                                        <rect x="0" y="0" width="120" height="120" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" rx="5"/>
+                                        <text x="60" y="20" text-anchor="middle" class="text-xs font-bold">Block</text>
+                                        
+                                        <rect x="10" y="30" width="100" height="20" fill="#e0f2fe" stroke="#0284c7" stroke-width="1" rx="2"/>
+                                        <text x="60" y="43" text-anchor="middle" class="text-xs">Prev Hash</text>
+                                        
+                                        <rect x="10" y="55" width="100" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="60" y="68" text-anchor="middle" class="text-xs">Nonce</text>
+                                        
+                                        <rect x="10" y="80" width="100" height="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="1" rx="2"/>
+                                        <text x="60" y="90" text-anchor="middle" class="text-xs">Tx</text>
+                                        <text x="60" y="103" text-anchor="middle" class="text-xs">Tx</text>
+                                    </g>
+                                    
+                                    <!-- Arrow 2 -->
+                                    <path d="M 360 110 L 400 110" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Block 3 -->
+                                    <g transform="translate(410, 50)">
+                                        <rect x="0" y="0" width="120" height="120" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" rx="5"/>
+                                        <text x="60" y="20" text-anchor="middle" class="text-xs font-bold">Block</text>
+                                        
+                                        <rect x="10" y="30" width="100" height="20" fill="#e0f2fe" stroke="#0284c7" stroke-width="1" rx="2"/>
+                                        <text x="60" y="43" text-anchor="middle" class="text-xs">Prev Hash</text>
+                                        
+                                        <rect x="10" y="55" width="100" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="60" y="68" text-anchor="middle" class="text-xs">Nonce</text>
+                                        
+                                        <rect x="10" y="80" width="100" height="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="1" rx="2"/>
+                                        <text x="60" y="90" text-anchor="middle" class="text-xs">Tx</text>
+                                        <text x="60" y="103" text-anchor="middle" class="text-xs">Tx</text>
+                                    </g>
+                                    
+                                    <!-- Hash arrows pointing down -->
+                                    <path d="M 110 180 L 110 200" stroke="#6b7280" stroke-width="1" marker-end="url(#smallarrow)"/>
+                                    <path d="M 290 180 L 290 200" stroke="#6b7280" stroke-width="1" marker-end="url(#smallarrow)"/>
+                                    <path d="M 470 180 L 470 200" stroke="#6b7280" stroke-width="1" marker-end="url(#smallarrow)"/>
+                                    
+                                    <!-- Hash results -->
+                                    <text x="110" y="220" text-anchor="middle" class="text-xs text-gray-600">00000...</text>
+                                    <text x="290" y="220" text-anchor="middle" class="text-xs text-gray-600">00000...</text>
+                                    <text x="470" y="220" text-anchor="middle" class="text-xs text-gray-600">00000...</text>
+                                    
+                                    <!-- CPU effort indicators -->
+                                    <g transform="translate(110, 10)">
+                                        <circle cx="0" cy="0" r="8" fill="#ef4444" opacity="0.7"/>
+                                        <text x="0" y="4" text-anchor="middle" class="text-xs fill-white font-bold">CPU</text>
+                                    </g>
+                                    <g transform="translate(290, 10)">
+                                        <circle cx="0" cy="0" r="8" fill="#ef4444" opacity="0.7"/>
+                                        <text x="0" y="4" text-anchor="middle" class="text-xs fill-white font-bold">CPU</text>
+                                    </g>
+                                    <g transform="translate(470, 10)">
+                                        <circle cx="0" cy="0" r="8" fill="#ef4444" opacity="0.7"/>
+                                        <text x="0" y="4" text-anchor="middle" class="text-xs fill-white font-bold">CPU</text>
+                                    </g>
+                                    
+                                    <!-- Arrow markers -->
+                                    <defs>
+                                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                            <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+                                        </marker>
+                                        <marker id="smallarrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                            <polygon points="0 0, 8 3, 0 6" fill="#6b7280"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <p class="text-sm text-gray-600 text-center mt-4">
+                                工作量证明机制通过在区块信息中加入一个随机数，使得该区块的随机散列值以一个或多个0开始。平均工作量将随所需的0的位数呈指数增长，而验证工作量只需要执行一次随机散列。
+                            </p>
+                        </div>
+
+                        <p class="mb-4">
+                            工作量证明还解决了"多数决策的代表性问题"：若按"一IP一票"，攻击者可伪造大量IP作弊；而工作量证明本质是"一算力一票"——多数决策由"最长链"代表，因为最长链投入的工作量证明最多。
+                        </p>
+                        <p class="mb-6">
+                            只要诚实节点控制多数算力，诚实链的增长速度就会超过任何竞争链条（攻击链）。攻击者若要篡改某旧区块，需：①重新计算该区块的工作量证明；②重新计算后续所有区块的工作量证明；③追上并超越诚实链的长度。后文将证明：随着后续区块数量增加，攻击者追上的概率会呈指数级下降。
+                        </p>
+                        <p>
+                            为应对"硬件算力提升"和"节点参与度变化"，工作量证明的难度会通过"移动平均值"动态调整：目标是每小时生成固定数量的区块（比特币实际目标是10分钟/块）。若区块生成速度过快（如10分钟出2块），难度就会提高（要求哈希开头更多零）；若过慢，则降低难度。
+                        </p>
+                    </div>
+
+                    <div class="concept-box p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold text-secondary mb-4 flex items-center">
+                            <i class="fa fa-lightbulb-o text-primary mr-2"></i>技术概念补充
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <strong class="text-secondary">随机数（Nonce）</strong>：区块中一个可任意调整的数值，是工作量证明的"解题关键"。例：区块数据固定时，矿工需试nonce=1、2、3……直到找到一个nonce，使"区块数据+nonce"的哈希值开头有18个零——这过程可能需要试几百万次，消耗大量CPU算力。
+                            </div>
+                            <div>
+                                <strong class="text-secondary">Hashcash</strong>：早期反垃圾邮件技术，发送邮件前需完成简单工作量证明（如算一个哈希），避免垃圾邮件群发（群发需大量算力，成本过高）。比特币的工作量证明正是基于Hashcash改进。
+                            </div>
+                            <div>
+                                <strong class="text-secondary">难度调整</strong>：比特币每2016个区块（约2周）调整一次难度。若前2016个区块的平均出块时间小于10分钟，说明算力增长，难度上调；若大于10分钟，难度下调——确保出块速度稳定，避免因算力波动导致交易确认时间忽快忽慢。
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. 交易 -->
+                <section id="transactions" class="bg-white rounded-xl shadow-sm p-8 mb-8 section-fade">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        <span class="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-bold mr-3">2</span>
+                        交易
+                    </h2>
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        <p class="mb-4">
+                            我们将"电子硬币"定义为一串数字签名链：每个所有者将硬币转给下一个人时，需对"前一笔交易的哈希值"和"下一个所有者的公钥"进行数字签名，并将签名添加到硬币的末尾。收款人可通过验证签名，确认所有权链条的合法性。
+                        </p>
+                        
+                        <div class="bg-white p-6 rounded-lg mb-6 border border-gray-200">
+                            <h4 class="text-center text-sm font-medium text-gray-700 mb-4">图1：交易链</h4>
+                            <div class="flex justify-center">
+                                <svg width="600" height="300" viewBox="0 0 600 300" class="max-w-full h-auto">
+                                    <!-- Transaction 1 -->
+                                    <g transform="translate(50, 50)">
+                                        <rect x="0" y="0" width="120" height="80" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" rx="5"/>
+                                        <text x="60" y="20" text-anchor="middle" class="text-xs font-medium">Owner 0's</text>
+                                        <text x="60" y="35" text-anchor="middle" class="text-xs font-medium">Public Key</text>
+                                        <rect x="10" y="45" width="100" height="25" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="3"/>
+                                        <text x="60" y="60" text-anchor="middle" class="text-xs">Owner 0's Signature</text>
+                                    </g>
+                                    
+                                    <!-- Arrow 1 -->
+                                    <path d="M 180 90 L 220 90" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Transaction 2 -->
+                                    <g transform="translate(230, 50)">
+                                        <rect x="0" y="0" width="120" height="80" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" rx="5"/>
+                                        <text x="60" y="20" text-anchor="middle" class="text-xs font-medium">Owner 1's</text>
+                                        <text x="60" y="35" text-anchor="middle" class="text-xs font-medium">Public Key</text>
+                                        <rect x="10" y="45" width="100" height="25" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="3"/>
+                                        <text x="60" y="60" text-anchor="middle" class="text-xs">Owner 1's Signature</text>
+                                    </g>
+                                    
+                                    <!-- Arrow 2 -->
+                                    <path d="M 360 90 L 400 90" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Transaction 3 -->
+                                    <g transform="translate(410, 50)">
+                                        <rect x="0" y="0" width="120" height="80" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" rx="5"/>
+                                        <text x="60" y="20" text-anchor="middle" class="text-xs font-medium">Owner 2's</text>
+                                        <text x="60" y="35" text-anchor="middle" class="text-xs font-medium">Public Key</text>
+                                        <rect x="10" y="45" width="100" height="25" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="3"/>
+                                        <text x="60" y="60" text-anchor="middle" class="text-xs">Owner 2's Signature</text>
+                                    </g>
+                                    
+                                    <!-- Hash arrows pointing down -->
+                                    <path d="M 110 140 L 110 170" stroke="#6b7280" stroke-width="1" marker-end="url(#smallarrow)"/>
+                                    <path d="M 290 140 L 290 170" stroke="#6b7280" stroke-width="1" marker-end="url(#smallarrow)"/>
+                                    <path d="M 470 140 L 470 170" stroke="#6b7280" stroke-width="1" marker-end="url(#smallarrow)"/>
+                                    
+                                    <!-- Hash labels -->
+                                    <text x="110" y="190" text-anchor="middle" class="text-xs text-gray-600">Hash</text>
+                                    <text x="290" y="190" text-anchor="middle" class="text-xs text-gray-600">Hash</text>
+                                    <text x="470" y="190" text-anchor="middle" class="text-xs text-gray-600">Hash</text>
+                                    
+                                    <!-- Verify arrows -->
+                                    <path d="M 110 210 L 290 50" stroke="#10b981" stroke-width="1" stroke-dasharray="3,3"/>
+                                    <path d="M 290 210 L 470 50" stroke="#10b981" stroke-width="1" stroke-dasharray="3,3"/>
+                                    
+                                    <text x="200" y="240" text-anchor="middle" class="text-xs text-green-600">Verify</text>
+                                    <text x="380" y="240" text-anchor="middle" class="text-xs text-green-600">Verify</text>
+                                    
+                                    <!-- Arrow markers -->
+                                    <defs>
+                                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                            <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+                                        </marker>
+                                        <marker id="smallarrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                            <polygon points="0 0, 8 3, 0 6" fill="#6b7280"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <p class="text-sm text-gray-600 text-center mt-4">
+                                每个所有者通过对前一笔交易的哈希和下一个所有者的公钥签署一个数字签名，并将这个签名添加到这枚硬币的末尾，来将这枚硬币转移给下一个所有者。
+                            </p>
+                        </div>
+
+                        <p class="mb-4">
+                            但核心问题是：收款人无法验证"之前的所有者是否没有双花这笔硬币"。常规解决方案是引入"可信中央机构"（即"铸币厂"），由其检查每笔交易是否存在双花。但该方案的缺陷在于：整个货币系统的命运依赖于运营铸币厂的公司——本质和银行无异。
+                        </p>
+
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded mb-6">
+                            <h4 class="font-semibold text-blue-800 mb-2">解决方案要求</h4>
+                            <ol class="list-decimal list-inside text-blue-700 space-y-1">
+                                <li>交易必须公开广播（让所有节点知晓）</li>
+                                <li>需建立一套系统，让参与者对"交易接收顺序"达成统一历史记录</li>
+                            </ol>
+                        </div>
+
+                        <p>收款人需要的证明是：在每笔交易发生时，多数节点都认可它是"最早收到的那笔"。</p>
+                    </div>
+
+                    <div class="concept-box p-6 rounded-lg mt-6">
+                        <h3 class="text-lg font-semibold text-secondary mb-4 flex items-center">
+                            <i class="fa fa-lightbulb-o text-primary mr-2"></i>技术概念补充
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <strong class="text-secondary">铸币厂（Mint）</strong>：传统货币体系中"发行+验证"的中央机构，如央行发行人民币、银行验证转账。比特币无铸币厂，由全网节点共同验证交易、发行新币（通过挖矿奖励）。
+                            </div>
+                            <div>
+                                <strong class="text-secondary">交易公开广播</strong>：节点发起交易后，会将交易信息发给周围所有可达节点，这些节点再转发给各自的邻居节点——类似"传话"，几分钟内整个网络就能知晓这笔交易。
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. 回收磁盘空间 -->
+                <section id="reclaiming-disk-space" class="bg-white rounded-xl shadow-sm p-8 mb-8 section-fade">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        <span class="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-bold mr-3">7</span>
+                        回收磁盘空间
+                    </h2>
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        <p class="mb-4">
+                            当某枚硬币的"最新交易"被足够多的后续区块覆盖后，该交易之前的"已花交易"（即历史交易记录）就可删除，以节省磁盘空间。
+                        </p>
+                        <p class="mb-4">
+                            为实现这一点且不破坏区块哈希，交易需按"默克尔树（Merkle Tree）"结构哈希：区块中所有交易先各自哈希，再两两合并哈希（形成父节点），重复此过程直到只剩一个"根哈希（默克尔根）"——仅默克尔根会被存入区块头的哈希中。
+                        </p>
+                        <p class="mb-6">
+                            这样，旧区块可通过"修剪默克尔树分支"来压缩：删除已花交易的哈希，仅保留"默克尔根+必要的分支节点"。内部哈希无需存储，不影响区块头哈希的有效性。
+                        </p>
+                        
+                        <div class="bg-white p-6 rounded-lg mb-6 border border-gray-200">
+                            <h4 class="text-center text-sm font-medium text-gray-700 mb-4">图4：回收磁盘空间</h4>
+                            <div class="flex justify-center space-x-8">
+                                <!-- Before pruning -->
+                                <div class="text-center">
+                                    <h5 class="text-xs font-medium text-gray-600 mb-3">压缩前的区块</h5>
+                                    <svg width="200" height="280" viewBox="0 0 200 280" class="max-w-full h-auto">
+                                        <!-- Block header -->
+                                        <rect x="20" y="20" width="160" height="40" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" rx="5"/>
+                                        <text x="100" y="35" text-anchor="middle" class="text-xs font-bold">Block Header</text>
+                                        <text x="100" y="50" text-anchor="middle" class="text-xs">Prev Hash | Nonce | Root Hash</text>
+                                        
+                                        <!-- Merkle Tree -->
+                                        <!-- Root -->
+                                        <rect x="80" y="80" width="40" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="100" y="93" text-anchor="middle" class="text-xs">Root</text>
+                                        
+                                        <!-- Level 1 -->
+                                        <rect x="40" y="120" width="40" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="60" y="133" text-anchor="middle" class="text-xs">Hash01</text>
+                                        
+                                        <rect x="120" y="120" width="40" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="140" y="133" text-anchor="middle" class="text-xs">Hash23</text>
+                                        
+                                        <!-- Level 2 -->
+                                        <rect x="20" y="160" width="30" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="35" y="173" text-anchor="middle" class="text-xs">Hash0</text>
+                                        
+                                        <rect x="70" y="160" width="30" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="85" y="173" text-anchor="middle" class="text-xs">Hash1</text>
+                                        
+                                        <rect x="110" y="160" width="30" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="125" y="173" text-anchor="middle" class="text-xs">Hash2</text>
+                                        
+                                        <rect x="150" y="160" width="30" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="165" y="173" text-anchor="middle" class="text-xs">Hash3</text>
+                                        
+                                        <!-- Transactions -->
+                                        <rect x="20" y="200" width="30" height="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="1" rx="2"/>
+                                        <text x="35" y="215" text-anchor="middle" class="text-xs">Tx0</text>
+                                        
+                                        <rect x="70" y="200" width="30" height="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="1" rx="2"/>
+                                        <text x="85" y="215" text-anchor="middle" class="text-xs">Tx1</text>
+                                        
+                                        <rect x="110" y="200" width="30" height="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="1" rx="2"/>
+                                        <text x="125" y="215" text-anchor="middle" class="text-xs">Tx2</text>
+                                        
+                                        <rect x="150" y="200" width="30" height="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="1" rx="2"/>
+                                        <text x="165" y="215" text-anchor="middle" class="text-xs">Tx3</text>
+                                        
+                                        <!-- Lines -->
+                                        <line x1="100" y1="100" x2="60" y2="120" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="100" y1="100" x2="140" y2="120" stroke="#6b7280" stroke-width="1"/>
+                                        
+                                        <line x1="60" y1="140" x2="35" y2="160" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="60" y1="140" x2="85" y2="160" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="140" y1="140" x2="125" y2="160" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="140" y1="140" x2="165" y2="160" stroke="#6b7280" stroke-width="1"/>
+                                        
+                                        <line x1="35" y1="180" x2="35" y2="200" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="85" y1="180" x2="85" y2="200" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="125" y1="180" x2="125" y2="200" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="165" y1="180" x2="165" y2="200" stroke="#6b7280" stroke-width="1"/>
+                                        
+                                        <text x="100" y="255" text-anchor="middle" class="text-xs text-gray-500">完整的默克尔树</text>
+                                    </svg>
+                                </div>
+                                
+                                <!-- After pruning -->
+                                <div class="text-center">
+                                    <h5 class="text-xs font-medium text-gray-600 mb-3">压缩后的区块</h5>
+                                    <svg width="200" height="280" viewBox="0 0 200 280" class="max-w-full h-auto">
+                                        <!-- Block header -->
+                                        <rect x="20" y="20" width="160" height="40" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" rx="5"/>
+                                        <text x="100" y="35" text-anchor="middle" class="text-xs font-bold">Block Header</text>
+                                        <text x="100" y="50" text-anchor="middle" class="text-xs">Prev Hash | Nonce | Root Hash</text>
+                                        
+                                        <!-- Merkle Tree (pruned) -->
+                                        <!-- Root -->
+                                        <rect x="80" y="80" width="40" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="100" y="93" text-anchor="middle" class="text-xs">Root</text>
+                                        
+                                        <!-- Level 1 - only Hash23 remains -->
+                                        <rect x="120" y="120" width="40" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="140" y="133" text-anchor="middle" class="text-xs">Hash23</text>
+                                        
+                                        <!-- Pruned area -->
+                                        <rect x="20" y="120" width="80" height="80" fill="#fee2e2" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,3" rx="5" opacity="0.5"/>
+                                        <text x="60" y="160" text-anchor="middle" class="text-xs text-red-600">已删除的</text>
+                                        <text x="60" y="175" text-anchor="middle" class="text-xs text-red-600">交易数据</text>
+                                        
+                                        <!-- Level 2 - only Hash3 remains -->
+                                        <rect x="150" y="160" width="30" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="165" y="173" text-anchor="middle" class="text-xs">Hash3</text>
+                                        
+                                        <!-- Transaction - only Tx3 remains -->
+                                        <rect x="150" y="200" width="30" height="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="1" rx="2"/>
+                                        <text x="165" y="215" text-anchor="middle" class="text-xs">Tx3</text>
+                                        
+                                        <!-- Lines -->
+                                        <line x1="100" y1="100" x2="140" y2="120" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="140" y1="140" x2="165" y2="160" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="165" y1="180" x2="165" y2="200" stroke="#6b7280" stroke-width="1"/>
+                                        
+                                        <text x="100" y="255" text-anchor="middle" class="text-xs text-gray-500">压缩后的默克尔树</text>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 text-center mt-4">
+                                一旦某笔交易中最新的交易已经被足够多的区块覆盖，这笔交易之前的支出交易就可以被丢弃，以节省磁盘空间。为了使得在不破坏区块随机散列值的前提下实现这一点，交易信息被随机散列时，被构建成一个Merkle树的形状，只有根被纳入了区块的随机散列值。
+                            </p>
+                        </div>
+
+                        <p>
+                            区块头（不含交易）约80字节。若按10分钟生成1个区块计算，每年仅需存储80字节×6（每小时6块）×24（每天24小时）×365（每年365天）≈4.2MB。2008年时电脑内存普遍为2GB，且按摩尔定律（每年增长1.2GB），即使需将区块头存入内存，存储也完全不是问题。
+                        </p>
+                    </div>
+
+                    <div class="concept-box p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold text-secondary mb-4 flex items-center">
+                            <i class="fa fa-lightbulb-o text-primary mr-2"></i>技术概念补充
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <strong class="text-secondary">默克尔树（Merkle Tree）</strong>：一种树形哈希结构，核心作用是"高效验证交易是否在区块中"。例：要验证Tx3是否在区块中，无需下载所有4笔交易，只需获取"Tx3的哈希Hash3、Tx2的哈希Hash2、Hash01、默克尔根"——先算Hash2+Hash3=Hash23，再算Hash01+Hash23=默克尔根，若与区块头的默克尔根一致，即可证明Tx3在区块中，大幅节省存储和带宽。
+                            </div>
+                            <div>
+                                <strong class="text-secondary">区块压缩（Pruning）</strong>：对已确认很久的旧区块（如1年前的区块），删除其中已花交易的详细数据，仅保留默克尔树的核心节点和区块头——比特币全节点可通过这种方式将存储需求从几十GB压缩到几GB，适合存储有限的设备。
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. 简化支付验证 -->
+                <section id="simplified-payment-verification" class="bg-white rounded-xl shadow-sm p-8 mb-8 section-fade">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        <span class="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-bold mr-3">8</span>
+                        简化支付验证
+                    </h2>
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        <p class="mb-4">
+                            无需运行全节点（即无需下载所有区块数据），也能验证支付有效性——这就是"简化支付验证（Simplified Payment Verification，SPV）"。
+                        </p>
+                        <p class="mb-4">用户只需做两件事：</p>
+                        <ol class="list-decimal list-inside space-y-2 mb-6">
+                            <li>获取"最长工作量证明链的区块头"（可通过向多个网络节点查询，确认自己拿到的是最长链）；</li>
+                            <li>获取"将目标交易链接到其所在区块的默克尔分支"（即验证交易所需的默克尔树分支节点）。</li>
+                        </ol>
+                        <p class="mb-6">
+                            用户无法自行验证交易的全部细节，但通过"将交易链接到链上某个区块"，可确认：①该交易已被网络节点接受；②后续新增的区块进一步确认了网络对该交易的认可。
+                        </p>
+                        
+                        <div class="bg-white p-6 rounded-lg mb-6 border border-gray-200">
+                            <h4 class="text-center text-sm font-medium text-gray-700 mb-4">图5：简化的支付确认</h4>
+                            <div class="flex justify-center">
+                                <svg width="600" height="350" viewBox="0 0 600 350" class="max-w-full h-auto">
+                                    <!-- Longest Proof-of-Work Chain -->
+                                    <text x="300" y="25" text-anchor="middle" class="text-sm font-bold">最长的工作量证明链</text>
+                                    
+                                    <!-- Block headers chain -->
+                                    <g transform="translate(50, 50)">
+                                        <rect x="0" y="0" width="80" height="40" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" rx="3"/>
+                                        <text x="40" y="15" text-anchor="middle" class="text-xs font-medium">Block Header</text>
+                                        <text x="40" y="30" text-anchor="middle" class="text-xs">Prev|Nonce|Root</text>
+                                    </g>
+                                    
+                                    <path d="M 140 70 L 170 70" stroke="#0284c7" stroke-width="2" marker-end="url(#bluearrow)"/>
+                                    
+                                    <g transform="translate(180, 50)">
+                                        <rect x="0" y="0" width="80" height="40" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" rx="3"/>
+                                        <text x="40" y="15" text-anchor="middle" class="text-xs font-medium">Block Header</text>
+                                        <text x="40" y="30" text-anchor="middle" class="text-xs">Prev|Nonce|Root</text>
+                                    </g>
+                                    
+                                    <path d="M 270 70 L 300 70" stroke="#0284c7" stroke-width="2" marker-end="url(#bluearrow)"/>
+                                    
+                                    <g transform="translate(310, 50)">
+                                        <rect x="0" y="0" width="80" height="40" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" rx="3"/>
+                                        <text x="40" y="15" text-anchor="middle" class="text-xs font-medium">Block Header</text>
+                                        <text x="40" y="30" text-anchor="middle" class="text-xs">Prev|Nonce|Root</text>
+                                    </g>
+                                    
+                                    <path d="M 400 70 L 430 70" stroke="#0284c7" stroke-width="2" marker-end="url(#bluearrow)"/>
+                                    
+                                    <g transform="translate(440, 50)">
+                                        <rect x="0" y="0" width="80" height="40" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" rx="3"/>
+                                        <text x="40" y="15" text-anchor="middle" class="text-xs font-medium">Block Header</text>
+                                        <text x="40" y="30" text-anchor="middle" class="text-xs">Prev|Nonce|Root</text>
+                                    </g>
+                                    
+                                    <!-- Merkle Branch for one block -->
+                                    <text x="220" y="130" text-anchor="middle" class="text-xs font-medium text-gray-600">用于验证交易的默克尔分支</text>
+                                    
+                                    <!-- Merkle tree structure -->
+                                    <g transform="translate(150, 150)">
+                                        <!-- Root -->
+                                        <rect x="60" y="0" width="40" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="80" y="13" text-anchor="middle" class="text-xs">Root</text>
+                                        
+                                        <!-- Level 1 -->
+                                        <rect x="30" y="40" width="40" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="50" y="53" text-anchor="middle" class="text-xs">Hash01</text>
+                                        
+                                        <rect x="90" y="40" width="40" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="110" y="53" text-anchor="middle" class="text-xs">Hash23</text>
+                                        
+                                        <!-- Level 2 - only show relevant hashes -->
+                                        <rect x="70" y="80" width="30" height="20" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" rx="2"/>
+                                        <text x="85" y="93" text-anchor="middle" class="text-xs">Hash2</text>
+                                        
+                                        <rect x="110" y="80" width="30" height="20" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" rx="2"/>
+                                        <text x="125" y="93" text-anchor="middle" class="text-xs font-bold">Hash3</text>
+                                        
+                                        <!-- Transaction being verified -->
+                                        <rect x="110" y="120" width="30" height="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" rx="2"/>
+                                        <text x="125" y="135" text-anchor="middle" class="text-xs font-bold">Tx3</text>
+                                        <text x="125" y="145" text-anchor="middle" class="text-xs font-bold">(验证)</text>
+                                        
+                                        <!-- Lines -->
+                                        <line x1="80" y1="20" x2="50" y2="40" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="80" y1="20" x2="110" y2="40" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="110" y1="60" x2="85" y2="80" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="110" y1="60" x2="125" y2="80" stroke="#6b7280" stroke-width="1"/>
+                                        <line x1="125" y1="100" x2="125" y2="120" stroke="#16a34a" stroke-width="2"/>
+                                        
+                                        <!-- Verification path highlight -->
+                                        <path d="M 125 150 L 125 100 L 110 60 L 80 20" stroke="#16a34a" stroke-width="3" fill="none" opacity="0.7"/>
+                                    </g>
+                                    
+                                    <!-- SPV Client -->
+                                    <g transform="translate(450, 200)">
+                                        <rect x="0" y="0" width="100" height="60" fill="#f3f4f6" stroke="#6b7280" stroke-width="2" rx="5"/>
+                                        <text x="50" y="20" text-anchor="middle" class="text-xs font-bold">SPV 客户端</text>
+                                        <text x="50" y="35" text-anchor="middle" class="text-xs">只需要:</text>
+                                        <text x="50" y="48" text-anchor="middle" class="text-xs">区块头+分支</text>
+                                    </g>
+                                    
+                                    <!-- Full Node -->
+                                    <g transform="translate(50, 200)">
+                                        <rect x="0" y="0" width="100" height="60" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="5"/>
+                                        <text x="50" y="20" text-anchor="middle" class="text-xs font-bold">全节点</text>
+                                        <text x="50" y="35" text-anchor="middle" class="text-xs">存储所有</text>
+                                        <text x="50" y="48" text-anchor="middle" class="text-xs">交易数据</text>
+                                    </g>
+                                    
+                                    <!-- Arrows showing data flow -->
+                                    <path d="M 220 90 L 220 150" stroke="#10b981" stroke-width="2" marker-end="url(#greenarrow)"/>
+                                    <text x="240" y="120" class="text-xs text-green-600">提供默克尔分支</text>
+                                    
+                                    <path d="M 350 90 L 450 200" stroke="#10b981" stroke-width="2" marker-end="url(#greenarrow)"/>
+                                    <text x="380" y="140" class="text-xs text-green-600">区块头</text>
+                                    
+                                    <!-- Arrow markers -->
+                                    <defs>
+                                        <marker id="bluearrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                            <polygon points="0 0, 10 3.5, 0 7" fill="#0284c7"/>
+                                        </marker>
+                                        <marker id="greenarrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                            <polygon points="0 0, 10 3.5, 0 7" fill="#10b981"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <p class="text-sm text-gray-600 text-center mt-4">
+                                在不运行完整网络节点的情况下，也能够对支付进行检验。一个用户需要保留最长的工作量证明链的区块头的副本，他可以不断向网络发起询问，直到他确信自己拥有最长的链，并能够通过merkle的分支通向它被加上时间戳并纳入区块的那笔交易。
+                            </p>
+                        </div>
+
+                        <p class="mb-4">
+                            简化验证的可靠性依赖于"诚实节点控制网络"：若攻击者掌控多数算力，可能伪造交易欺骗SPV用户（但全节点能识别伪造）。应对策略是：SPV客户端可接收全节点的"无效区块警报"——当全节点发现无效区块时，SPV客户端会下载该区块及相关交易，手动确认一致性。
+                        </p>
+                        <p>
+                            对于频繁收款的商家（如电商平台），建议运行全节点：既能获得更独立的安全性（不依赖其他节点的警报），也能更快验证交易（无需等待SPV的分支查询）。
+                        </p>
+                    </div>
+
+                    <div class="concept-box p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold text-secondary mb-4 flex items-center">
+                            <i class="fa fa-lightbulb-o text-primary mr-2"></i>技术概念补充
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <strong class="text-secondary">全节点（Full Node）</strong>：下载并存储所有区块数据（截至2024年约500GB），验证每笔交易和每个区块的合法性，是比特币网络的"骨干"。例：比特币核心客户端（Bitcoin Core）就是全节点，会检查交易是否双花、区块是否符合工作量证明要求。
+                            </div>
+                            <div>
+                                <strong class="text-secondary">SPV客户端</strong>：仅下载区块头（约4.2MB/年），通过默克尔分支验证交易，适合手机、平板等存储/带宽有限的设备。例：多数手机比特币钱包（如Electrum）都是SPV客户端，你收到比特币时，钱包会向全节点请求默克尔分支，验证后告诉你"交易已确认"。
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 9. 合并与拆分价值 -->
+                <section id="combining-splitting-value" class="bg-white rounded-xl shadow-sm p-8 mb-8 section-fade">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        <span class="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-bold mr-3">9</span>
+                        合并与拆分价值
+                    </h2>
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        <p class="mb-4">
+                            虽然可对单个硬币单独处理，但对小额转账（如几分钱）单独发起交易会非常繁琐。为实现"价值的拆分与合并"，比特币交易支持"多输入、多输出"：
+                        </p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-start">
+                                <i class="fa fa-arrow-right text-primary mt-1 mr-3"></i>
+                                输入：通常是"一笔大额历史交易的输出"或"多笔小额历史交易的输出合并"（凑够转账金额）；
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-arrow-right text-primary mt-1 mr-3"></i>
+                                输出：最多两个——一个是转给收款人的金额，另一个是"找零"（将剩余金额转回自己的地址）。
+                            </li>
+                        </ul>
+                        
+                        <div class="bg-white p-6 rounded-lg mb-6 border border-gray-200">
+                            <h4 class="text-center text-sm font-medium text-gray-700 mb-4">图6：合并和分割价值</h4>
+                            <div class="flex justify-center">
+                                <svg width="500" height="300" viewBox="0 0 500 300" class="max-w-full h-auto">
+                                    <!-- Input transactions -->
+                                    <g transform="translate(50, 50)">
+                                        <rect x="0" y="0" width="80" height="40" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" rx="3"/>
+                                        <text x="40" y="20" text-anchor="middle" class="text-xs font-medium">输入1</text>
+                                        <text x="40" y="32" text-anchor="middle" class="text-xs">0.3 BTC</text>
+                                    </g>
+                                    
+                                    <g transform="translate(50, 110)">
+                                        <rect x="0" y="0" width="80" height="40" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" rx="3"/>
+                                        <text x="40" y="20" text-anchor="middle" class="text-xs font-medium">输入2</text>
+                                        <text x="40" y="32" text-anchor="middle" class="text-xs">0.5 BTC</text>
+                                    </g>
+                                    
+                                    <g transform="translate(50, 170)">
+                                        <rect x="0" y="0" width="80" height="40" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" rx="3"/>
+                                        <text x="40" y="20" text-anchor="middle" class="text-xs font-medium">输入3</text>
+                                        <text x="40" y="32" text-anchor="middle" class="text-xs">0.2 BTC</text>
+                                    </g>
+                                    
+                                    <!-- Transaction box -->
+                                    <g transform="translate(200, 100)">
+                                        <rect x="0" y="0" width="100" height="80" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="5"/>
+                                        <text x="50" y="20" text-anchor="middle" class="text-sm font-bold">交易</text>
+                                        <text x="50" y="40" text-anchor="middle" class="text-xs">总输入: 1.0 BTC</text>
+                                        <text x="50" y="55" text-anchor="middle" class="text-xs">手续费: 0.001 BTC</text>
+                                        <text x="50" y="70" text-anchor="middle" class="text-xs">可用: 0.999 BTC</text>
+                                    </g>
+                                    
+                                    <!-- Output transactions -->
+                                    <g transform="translate(370, 80)">
+                                        <rect x="0" y="0" width="80" height="40" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" rx="3"/>
+                                        <text x="40" y="20" text-anchor="middle" class="text-xs font-medium">输出1</text>
+                                        <text x="40" y="32" text-anchor="middle" class="text-xs">0.7 BTC</text>
+                                    </g>
+                                    
+                                    <g transform="translate(370, 140)">
+                                        <rect x="0" y="0" width="80" height="40" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" rx="3"/>
+                                        <text x="40" y="20" text-anchor="middle" class="text-xs font-medium">输出2 (找零)</text>
+                                        <text x="40" y="32" text-anchor="middle" class="text-xs">0.299 BTC</text>
+                                    </g>
+                                    
+                                    <!-- Arrows from inputs to transaction -->
+                                    <path d="M 140 70 L 190 130" stroke="#0284c7" stroke-width="2" marker-end="url(#bluearrow)"/>
+                                    <path d="M 140 130 L 190 140" stroke="#0284c7" stroke-width="2" marker-end="url(#bluearrow)"/>
+                                    <path d="M 140 190 L 190 150" stroke="#0284c7" stroke-width="2" marker-end="url(#bluearrow)"/>
+                                    
+                                    <!-- Arrows from transaction to outputs -->
+                                    <path d="M 310 130 L 360 100" stroke="#16a34a" stroke-width="2" marker-end="url(#greenarrow)"/>
+                                    <path d="M 310 150 L 360 160" stroke="#16a34a" stroke-width="2" marker-end="url(#greenarrow)"/>
+                                    
+                                    <!-- Labels -->
+                                    <text x="90" y="30" text-anchor="middle" class="text-xs font-medium text-gray-600">多个输入</text>
+                                    <text x="410" y="60" text-anchor="middle" class="text-xs font-medium text-gray-600">多个输出</text>
+                                    
+                                    <!-- Fee indication -->
+                                    <g transform="translate(220, 220)">
+                                        <rect x="0" y="0" width="60" height="25" fill="#fee2e2" stroke="#ef4444" stroke-width="1" rx="3"/>
+                                        <text x="30" y="15" text-anchor="middle" class="text-xs">手续费</text>
+                                        <text x="30" y="25" text-anchor="middle" class="text-xs">0.001 BTC</text>
+                                    </g>
+                                    
+                                    <path d="M 250 200 L 250 220" stroke="#ef4444" stroke-width="1" marker-end="url(#redarrow)"/>
+                                    
+                                    <!-- Arrow markers -->
+                                    <defs>
+                                        <marker id="bluearrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                            <polygon points="0 0, 10 3.5, 0 7" fill="#0284c7"/>
+                                        </marker>
+                                        <marker id="greenarrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                            <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+                                        </marker>
+                                        <marker id="redarrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                            <polygon points="0 0, 8 3, 0 6" fill="#ef4444"/>
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <p class="text-sm text-gray-600 text-center mt-4">
+                                为了使得价值易于分割和合并，交易被设计为包含多个输入和输出。一般而言是某个较大金额的单一输入或者某几个较小金额的多个输入，以及最多两个输出：一个用于支付，另一个用于找零（如果有的话）返还给支付方。
+                            </p>
+                        </div>
+
+                        <p>
+                            需注意："扇出（Fan-out）"问题（即一笔交易依赖多笔交易，这些交易又依赖更多交易）不会影响系统——因为无需提取某笔交易的完整历史记录，只需通过默克尔树验证它在链上即可。
+                        </p>
+                    </div>
+
+                    <div class="concept-box p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold text-secondary mb-4 flex items-center">
+                            <i class="fa fa-lightbulb-o text-primary mr-2"></i>技术概念补充
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <strong class="text-secondary">多输入多输出示例</strong>：你有三笔历史收款：0.2枚、0.3枚、0.5枚比特币（共1枚），要转给朋友0.8枚。交易结构为：输入：0.2枚（来自交易A）、0.3枚（来自交易B）、0.5枚（来自交易C）；输出1：0.8枚（转给朋友的地址）；输出2：0.2枚（找零，转回自己的另一个地址）；交易费：0（若输入1枚=输出0.8+0.2，无差额；若输出0.8+0.199，差额0.001即为交易费）。
+                            </div>
+                            <div>
+                                <strong class="text-secondary">找零地址</strong>：建议每次转账用新的找零地址，避免地址关联（保护隐私）——比如这次找零用地址X，下次用地址Y，别人无法通过找零地址判断X和Y属于同一人。
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10. 隐私 -->
+                <section id="privacy" class="bg-white rounded-xl shadow-sm p-8 mb-8 section-fade">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        <span class="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-bold mr-3">10</span>
+                        隐私
+                    </h2>
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        <p class="mb-4">
+                            传统银行模型的隐私保护方式是"限制信息访问"：仅交易双方和可信第三方能查看交易详情。但比特币需"公开广播所有交易"，无法用这种方式，因此需通过"断开身份与公钥的关联"来保护隐私——即"公钥匿名"。
+                        </p>
+                        <p class="mb-6">
+                            具体来说：区块链上能看到"某公钥向另一公钥转账的金额和时间"，但无法知晓这些公钥对应的真实身份（如姓名、手机号）。这类似证券交易所的"行情tape"：公众能看到每笔交易的时间、金额，但看不到买卖双方是谁。
+                        </p>
+                        
+                        <div class="bg-white p-6 rounded-lg mb-6 border border-gray-200">
+                            <h4 class="text-center text-sm font-medium text-gray-700 mb-4">图7：隐私</h4>
+                            <div class="flex justify-center space-x-12">
+                                <!-- Traditional Privacy Model -->
+                                <div class="text-center">
+                                    <h5 class="text-sm font-medium text-gray-700 mb-4">传统隐私模型</h5>
+                                    <svg width="200" height="250" viewBox="0 0 200 250" class="max-w-full h-auto">
+                                        <!-- Trusted Third Party -->
+                                        <g transform="translate(75, 20)">
+                                            <rect x="0" y="0" width="50" height="40" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="5"/>
+                                            <text x="25" y="20" text-anchor="middle" class="text-xs font-bold">可信</text>
+                                            <text x="25" y="32" text-anchor="middle" class="text-xs font-bold">第三方</text>
+                                        </g>
+                                        
+                                        <!-- Counterparty A -->
+                                        <g transform="translate(20, 100)">
+                                            <circle cx="25" cy="25" r="20" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+                                            <text x="25" y="30" text-anchor="middle" class="text-xs font-bold">A</text>
+                                            <text x="25" y="55" text-anchor="middle" class="text-xs">交易方A</text>
+                                        </g>
+                                        
+                                        <!-- Counterparty B -->
+                                        <g transform="translate(130, 100)">
+                                            <circle cx="25" cy="25" r="20" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                                            <text x="25" y="30" text-anchor="middle" class="text-xs font-bold">B</text>
+                                            <text x="25" y="55" text-anchor="middle" class="text-xs">交易方B</text>
+                                        </g>
+                                        
+                                        <!-- Public -->
+                                        <g transform="translate(75, 180)">
+                                            <rect x="0" y="0" width="50" height="30" fill="#f3f4f6" stroke="#6b7280" stroke-width="2" rx="3"/>
+                                            <text x="25" y="20" text-anchor="middle" class="text-xs font-bold">公众</text>
+                                        </g>
+                                        
+                                        <!-- Privacy barrier -->
+                                        <rect x="10" y="70" width="180" height="100" fill="none" stroke="#ef4444" stroke-width="3" stroke-dasharray="5,5" rx="10"/>
+                                        <text x="100" y="85" text-anchor="middle" class="text-xs text-red-600 font-bold">隐私屏障</text>
+                                        
+                                        <!-- Information flow arrows -->
+                                        <path d="M 100 60 L 65 100" stroke="#f59e0b" stroke-width="2"/>
+                                        <path d="M 100 60 L 135 100" stroke="#f59e0b" stroke-width="2"/>
+                                        
+                                        <!-- Labels -->
+                                        <text x="100" y="235" text-anchor="middle" class="text-xs text-gray-600">身份+交易信息对第三方可见</text>
+                                        <text x="100" y="245" text-anchor="middle" class="text-xs text-gray-600">对公众不可见</text>
+                                    </svg>
+                                </div>
+                                
+                                <!-- Bitcoin Privacy Model -->
+                                <div class="text-center">
+                                    <h5 class="text-sm font-medium text-gray-700 mb-4">比特币隐私模型</h5>
+                                    <svg width="200" height="250" viewBox="0 0 200 250" class="max-w-full h-auto">
+                                        <!-- Public Ledger -->
+                                        <g transform="translate(75, 20)">
+                                            <rect x="0" y="0" width="50" height="40" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" rx="5"/>
+                                            <text x="25" y="20" text-anchor="middle" class="text-xs font-bold">公开</text>
+                                            <text x="25" y="32" text-anchor="middle" class="text-xs font-bold">账本</text>
+                                        </g>
+                                        
+                                        <!-- Anonymous Key A -->
+                                        <g transform="translate(20, 100)">
+                                            <rect x="0" y="0" width="40" height="30" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" rx="3"/>
+                                            <text x="20" y="18" text-anchor="middle" class="text-xs font-bold">公钥A</text>
+                                            <text x="20" y="45" text-anchor="middle" class="text-xs">匿名</text>
+                                        </g>
+                                        
+                                        <!-- Anonymous Key B -->
+                                        <g transform="translate(140, 100)">
+                                            <rect x="0" y="0" width="40" height="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" rx="3"/>
+                                            <text x="20" y="18" text-anchor="middle" class="text-xs font-bold">公钥B</text>
+                                            <text x="20" y="45" text-anchor="middle" class="text-xs">匿名</text>
+                                        </g>
+                                        
+                                        <!-- Public -->
+                                        <g transform="translate(75, 180)">
+                                            <rect x="0" y="0" width="50" height="30" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="3"/>
+                                            <text x="25" y="20" text-anchor="middle" class="text-xs font-bold">公众</text>
+                                        </g>
+                                        
+                                        <!-- Identity barrier -->
+                                        <rect x="10" y="90" width="180" height="50" fill="none" stroke="#ef4444" stroke-width="3" stroke-dasharray="5,5" rx="5"/>
+                                        <text x="100" y="105" text-anchor="middle" class="text-xs text-red-600 font-bold">身份隐私</text>
+                                        
+                                        <!-- Public information flow -->
+                                        <path d="M 100 60 L 100 180" stroke="#16a34a" stroke-width="3"/>
+                                        <text x="110" y="120" class="text-xs text-green-600 font-bold">交易金额</text>
+                                        <text x="110" y="135" class="text-xs text-green-600 font-bold">公开可见</text>
+                                        
+                                        <!-- Labels -->
+                                        <text x="100" y="235" text-anchor="middle" class="text-xs text-gray-600">交易信息公开，身份匿名</text>
+                                        <text x="100" y="245" text-anchor="middle" class="text-xs text-gray-600">通过新公钥保护隐私</text>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 text-center mt-4">
+                                传统的银行模式能够达到一定程度的隐私保护，因为试图向可信的第三方限制信息的获取。但是如果将交易信息向全网进行广播，这种方法就失效了。隐私依然可以得到保护：将公钥保持为匿名。公众能够看到的只是有某个人将一定数量的货币发送给了另外一个人，但是难以将该交易同特定的人联系起来，也就是说，公众无法确信，这些人就是交易的参与方。
+                            </p>
+                        </div>
+
+                        <p class="mb-4">
+                            进一步的隐私保护建议：每次交易使用新的公钥对（即新地址），避免因"同一公钥多次使用"导致交易被关联。需注意：多输入交易仍会泄露部分信息——若一笔交易的多个输入来自不同公钥，这些公钥必然属于同一人（因为只有同一人能控制多个私钥签名）。
+                        </p>
+                        <p>
+                            风险在于：若某公钥的身份被曝光，所有与该公钥关联的交易（如多输入中的其他公钥）都会被追溯到同一人。
+                        </p>
+                    </div>
+
+                    <div class="concept-box p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold text-secondary mb-4 flex items-center">
+                            <i class="fa fa-lightbulb-o text-primary mr-2"></i>技术概念补充
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <strong class="text-secondary">公钥与地址</strong>：比特币地址是公钥经过哈希处理后的字符串（如"1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"），用户转账时公开地址，而非直接公开公钥（进一步保护隐私）。但地址仍需定期更换——若你长期用同一个地址收款，别人能通过区块链追踪你所有的收款记录。
+                            </div>
+                            <div>
+                                <strong class="text-secondary">隐私增强技术</strong>：比特币原生隐私性有限，因此出现了Zcash（零知识证明，完全隐藏金额和地址）、Monero（环签名，混淆交易来源）等隐私币，以及比特币的闪电网络（部分交易在链下进行，不公开）。
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 12. 结论 -->
+                <section id="conclusion" class="bg-white rounded-xl shadow-sm p-8 mb-8 section-fade">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        <span class="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-bold mr-3">12</span>
+                        结论
+                    </h2>
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        <p class="mb-4">我们提出了一种"无需依赖信任"的电子交易系统：</p>
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                以"数字签名链构成的电子硬币"为基础，确保所有权控制；
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                通过"点对点网络+工作量证明"解决双花问题，生成"公开、不可篡改的交易历史记录"；
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                网络结构简洁且健壮：节点无需协调即可同步工作，无需身份验证；
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                共识机制（算力投票）可强制执行规则，激励机制鼓励节点保持诚实。
+                            </li>
+                        </ul>
+                        <div class="bg-primary/10 border border-primary/20 rounded-lg p-6 text-center">
+                            <p class="text-lg font-semibold text-primary mb-2">
+                                该系统实现了"去中心化电子现金"的核心目标
+                            </p>
+                            <p class="text-gray-700">
+                                无需金融机构，任意双方可直接安全交易
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 参考文献 -->
+                <section id="references" class="bg-white rounded-xl shadow-sm p-8 mb-8 section-fade">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        <i class="fa fa-book text-primary mr-3"></i>参考文献
+                    </h2>
+                    <div class="space-y-4 text-sm">
+                        <div class="border-l-4 border-gray-200 pl-4">
+                            <p class="font-medium">[1] 戴伟（W. Dai），《b-money》，1998年。</p>
+                            <p class="text-gray-600 mt-1">补充：b-money是早期去中心化电子现金构想，提出"点对点交易+工作量证明发行货币"，直接影响了比特币的设计。</p>
+                        </div>
+                        <div class="border-l-4 border-gray-200 pl-4">
+                            <p class="font-medium">[6] 亚当·拜克（A. Back），《Hashcash——一种拒绝服务攻击防御机制》，2002年。</p>
+                            <p class="text-gray-600 mt-1">补充：Hashcash是比特币工作量证明的直接原型，最初用于反垃圾邮件，后被中本聪改编用于比特币的区块验证。</p>
+                        </div>
+                        <div class="border-l-4 border-gray-200 pl-4">
+                            <p class="font-medium">[7] R.C. 默克尔（R.C. Merkle），《公钥密码系统协议》，1980年。</p>
+                            <p class="text-gray-600 mt-1">补充：默克尔树的提出者，该结构被广泛用于比特币、区块链、分布式系统中，实现高效数据验证。</p>
+                        </div>
+                        <div class="border-l-4 border-gray-200 pl-4">
+                            <p class="font-medium">[8] W. 费勒（W. Feller），《概率论及其应用导论》，1957年。</p>
+                            <p class="text-gray-600 mt-1">补充：经典概率论教材，比特币中"攻击者追上概率"的计算模型（赌徒破产问题）即来自该书。</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex items-center justify-center mb-4">
+                <i class="fa fa-bitcoin text-primary text-2xl mr-2"></i>
+                <span class="text-lg font-semibold">比特币白皮书中文版</span>
+            </div>
+            <p class="text-gray-400 text-sm mb-2">
+                原文发布于2008年10月31日 | 中本聪（Satoshi Nakamoto）
+            </p>
+            <p class="text-gray-500 text-xs">
+                本页面仅供学习研究使用，不构成任何投资建议
+            </p>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary/90">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // 滚动显示动画
+        function checkSectionVisibility() {
+            const sections = document.querySelectorAll('.section-fade');
+            const triggerBottom = window.innerHeight * 0.8;
+
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < triggerBottom) {
+                    section.classList.add('section-visible');
+                }
+            });
+        }
+
+        // 返回顶部按钮
+        function toggleBackToTop() {
+            const backToTopButton = document.getElementById('back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        }
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // 返回顶部功能
+        document.getElementById('back-to-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 字体大小调整
+        let fontSize = 18;
+        document.getElementById('font-size-btn').addEventListener('click', function() {
+            fontSize = fontSize >= 24 ? 16 : fontSize + 2;
+            document.body.style.fontSize = fontSize + 'px';
+        });
+        
+        // 设置初始字体大小
+        document.body.style.fontSize = fontSize + 'px';
+
+        // 打印功能
+        document.getElementById('print-btn').addEventListener('click', function() {
+            window.print();
+        });
+
+        // 初始化
+        window.addEventListener('load', function() {
+            checkSectionVisibility();
+            toggleBackToTop();
+        });
+
+        // 滚动事件监听
+        window.addEventListener('scroll', function() {
+            checkSectionVisibility();
+            toggleBackToTop();
+        });
+    </script>
+</body>
+</html>

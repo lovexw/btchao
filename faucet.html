@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比特币水龙头 | Bitcoin Faucet - 免费获取比特币</title>
+    <meta name="description" content="怀念早期比特币水龙头网站，了解比特币普及历史和社区文化。体验复古风格的比特币水龙头界面，学习比特币发展历程。">
+    <meta name="keywords" content="比特币水龙头,Bitcoin Faucet,免费比特币,比特币历史,早期比特币,社区文化">
+    <meta name="author" content="小吴乐意">
+    <meta property="og:title" content="比特币水龙头 | Bitcoin Faucet - 免费获取比特币">
+    <meta property="og:description" content="怀念早期比特币水龙头网站，了解比特币普及历史和社区文化。">
+    <meta name="robots" content="index, follow">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2726670321929378"
+         crossorigin="anonymous"></script>
+    <style>
+        /* 复古风格样式 */
+        body {
+            background: linear-gradient(45deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .retro-container {
+            background: #f0f0f0;
+            border: 3px solid #333;
+            box-shadow: 5px 5px 0px #000;
+        }
+        
+        .retro-button {
+            background: linear-gradient(to bottom, #4CAF50 0%, #45a049 100%);
+            border: 2px solid #333;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 3px 3px 0px #000;
+            transition: all 0.1s;
+        }
+        
+        .retro-button:hover {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0px #000;
+        }
+        
+        .retro-button:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px #000;
+        }
+        
+        .retro-input {
+            border: 2px solid #333;
+            background: #fff;
+            font-family: 'Courier New', monospace;
+            box-shadow: inset 2px 2px 0px #ccc;
+        }
+        
+        .bitcoin-animation {
+            animation: spin 3s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .drip-animation {
+            animation: drip 2s ease-in-out infinite;
+        }
+        
+        @keyframes drip {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(10px); }
+        }
+        
+        .retro-text {
+            text-shadow: 2px 2px 0px #000;
+            color: #fff;
+        }
+        
+        .claim-effect {
+            animation: claimPulse 0.5s ease-out;
+        }
+        
+        @keyframes claimPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .satoshi-counter {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 2px 2px 0px #000;
+        }
+        
+        /* 复古广告样式 */
+        .retro-ad {
+            background: #ffff00;
+            border: 2px solid #ff0000;
+            color: #ff0000;
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.7; }
+        }
+        
+        /* 老式CRT显示器效果 */
+        .crt-effect {
+            background: linear-gradient(transparent 50%, rgba(0,255,0,0.03) 50%);
+            background-size: 100% 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen crt-effect">
+    <!-- 复古标题栏 -->
+    <header class="py-8">
+        <div class="container mx-auto px-4 text-center">
+            <div class="retro-container p-6 max-w-4xl mx-auto">
+                <h1 class="text-4xl font-bold mb-4" style="color: #333;">
+                    🚰 比特币水龙头 BITCOIN FAUCET 🚰
+                </h1>
+                <p class="text-lg mb-2" style="color: #666;">免费获取比特币聪 (Satoshi) - 每小时一次</p>
+                <p class="text-sm" style="color: #999;">怀念2010年代的比特币水龙头时光</p>
+                
+                <!-- 复古状态栏 -->
+                <div class="mt-4 p-3 bg-black text-green-400 font-mono text-sm">
+                    <div class="flex justify-between items-center">
+                        <span>STATUS: ONLINE</span>
+                        <span>USERS: <span id="userCount">1,337</span></span>
+                        <span>BTC PRICE: $<span id="btcPrice">65,000</span></span>
+                        <span id="currentTime"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 pb-8">
+        <!-- 主要水龙头区域 -->
+        <div class="retro-container p-8 max-w-2xl mx-auto mb-8">
+            <div class="text-center mb-8">
+                <div class="bitcoin-animation text-6xl mb-4">₿</div>
+                <h2 class="text-2xl font-bold mb-4" style="color: #333;">免费比特币水龙头</h2>
+                <div class="satoshi-counter mb-4">
+                    <span id="satoshiAmount">100</span> Satoshi
+                </div>
+                <p class="text-gray-600 mb-6">输入您的比特币地址，每小时可免费获取 50-500 Satoshi</p>
+            </div>
+
+            <!-- 地址输入和领取按钮 -->
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold mb-2" style="color: #333;">比特币地址:</label>
+                    <input 
+                        type="text" 
+                        id="btcAddress" 
+                        class="retro-input w-full p-3 text-sm"
+                        placeholder="输入您的比特币地址 (例如: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa)"
+                        maxlength="62"
+                    >
+                </div>
+                
+                <!-- 验证码 -->
+                <div>
+                    <label class="block text-sm font-bold mb-2" style="color: #333;">验证码:</label>
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-gray-200 p-3 border-2 border-gray-400 font-mono text-xl">
+                            <span id="captcha">5 + 3 = ?</span>
+                        </div>
+                        <input 
+                            type="number" 
+                            id="captchaInput" 
+                            class="retro-input p-3 w-20 text-center"
+                            placeholder="?"
+                        >
+                        <button onclick="refreshCaptcha()" class="retro-button px-4 py-2 text-sm">
+                            刷新
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 领取按钮 -->
+                <div class="text-center">
+                    <button 
+                        id="claimButton" 
+                        onclick="claimSatoshi()" 
+                        class="retro-button px-8 py-4 text-xl"
+                    >
+                        💰 领取免费比特币 💰
+                    </button>
+                </div>
+
+                <!-- 倒计时显示 -->
+                <div id="cooldownTimer" class="text-center text-red-600 font-bold hidden">
+                    <p>请等待 <span id="timeLeft">3600</span> 秒后再次领取</p>
+                </div>
+
+                <!-- 成功消息 -->
+                <div id="successMessage" class="bg-green-100 border-2 border-green-500 p-4 text-center hidden">
+                    <p class="text-green-800 font-bold">🎉 恭喜！您已成功获得 <span id="claimedAmount">100</span> Satoshi！</p>
+                    <p class="text-green-600 text-sm mt-2">交易ID: <span id="txId" class="font-mono"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计信息 -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="retro-container p-6 text-center">
+                <h3 class="text-xl font-bold mb-2" style="color: #333;">今日发放</h3>
+                <div class="text-2xl font-bold text-orange-600">
+                    <span id="todayPayout">12,345</span> Satoshi
+                </div>
+                <p class="text-sm text-gray-600 mt-2">≈ $<span id="todayUSD">8.02</span></p>
+            </div>
+            
+            <div class="retro-container p-6 text-center">
+                <h3 class="text-xl font-bold mb-2" style="color: #333;">总计发放</h3>
+                <div class="text-2xl font-bold text-blue-600">
+                    <span id="totalPayout">1,234,567</span> Satoshi
+                </div>
+                <p class="text-sm text-gray-600 mt-2">≈ $<span id="totalUSD">802.47</span></p>
+            </div>
+            
+            <div class="retro-container p-6 text-center">
+                <h3 class="text-xl font-bold mb-2" style="color: #333;">活跃用户</h3>
+                <div class="text-2xl font-bold text-green-600">
+                    <span id="activeUsers">456</span>
+                </div>
+                <p class="text-sm text-gray-600 mt-2">过去24小时</p>
+            </div>
+        </div>
+
+        <!-- 复古广告区域 -->
+        <div class="retro-ad p-4 text-center mb-8">
+            <p class="text-lg">🔥 想要更多比特币？访问我们的合作伙伴网站！🔥</p>
+            <p class="text-sm">免费挖矿 | 交易所推荐 | 投资指南</p>
+        </div>
+
+        <!-- 水龙头历史和说明 -->
+        <div class="retro-container p-8 mb-8">
+            <h2 class="text-2xl font-bold mb-6" style="color: #333;">关于比特币水龙头</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4" style="color: #555;">历史背景</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>• <strong>2010年</strong>：第一个比特币水龙头由Gavin Andresen创建</li>
+                        <li>• <strong>每次发放5个BTC</strong>：当时比特币价值极低</li>
+                        <li>• <strong>推广目的</strong>：让更多人了解和使用比特币</li>
+                        <li>• <strong>黄金时代</strong>：2010-2013年，数百个水龙头网站</li>
+                        <li>• <strong>逐渐衰落</strong>：随着比特币价格上涨，发放量减少</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4" style="color: #555;">工作原理</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>• <strong>免费发放</strong>：用户提供比特币地址即可获得</li>
+                        <li>• <strong>时间限制</strong>：通常每小时或每天限制一次</li>
+                        <li>• <strong>验证码</strong>：防止机器人自动领取</li>
+                        <li>• <strong>广告收入</strong>：通过展示广告维持运营</li>
+                        <li>• <strong>推荐奖励</strong>：邀请朋友可获得额外奖励</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-8 p-4 bg-yellow-100 border-2 border-yellow-400 rounded">
+                <h4 class="font-bold text-yellow-800 mb-2">💡 怀旧提醒</h4>
+                <p class="text-yellow-700 text-sm">
+                    这是一个怀念性质的模拟网站，不会真正发放比特币。真正的比特币水龙头在2010年代曾经让无数人第一次接触到比特币，
+                    那时候5个BTC只需要完成一个简单的验证码。如今这些比特币价值数十万美元，成为了加密货币历史上的传奇故事。
+                </p>
+            </div>
+        </div>
+
+        <!-- 著名水龙头历史 -->
+        <div class="retro-container p-8 mb-8">
+            <h2 class="text-2xl font-bold mb-6" style="color: #333;">著名水龙头历史</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b-2 border-gray-400">
+                            <th class="text-left py-3 px-4">网站名称</th>
+                            <th class="text-left py-3 px-4">创建时间</th>
+                            <th class="text-left py-3 px-4">发放数量</th>
+                            <th class="text-left py-3 px-4">当时价值</th>
+                            <th class="text-left py-3 px-4">现在价值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-300">
+                            <td class="py-3 px-4 font-bold">Bitcoin Faucet (原版)</td>
+                            <td class="py-3 px-4">2010年6月</td>
+                            <td class="py-3 px-4">5 BTC</td>
+                            <td class="py-3 px-4">$0.02</td>
+                            <td class="py-3 px-4 text-green-600 font-bold">$325,000</td>
+                        </tr>
+                        <tr class="border-b border-gray-300">
+                            <td class="py-3 px-4 font-bold">FreeBitcoins</td>
+                            <td class="py-3 px-4">2011年</td>
+                            <td class="py-3 px-4">0.5 BTC</td>
+                            <td class="py-3 px-4">$0.50</td>
+                            <td class="py-3 px-4 text-green-600 font-bold">$32,500</td>
+                        </tr>
+                        <tr class="border-b border-gray-300">
+                            <td class="py-3 px-4 font-bold">BitcoinGet</td>
+                            <td class="py-3 px-4">2012年</td>
+                            <td class="py-3 px-4">0.1 BTC</td>
+                            <td class="py-3 px-4">$1.20</td>
+                            <td class="py-3 px-4 text-green-600 font-bold">$6,500</td>
+                        </tr>
+                        <tr class="border-b border-gray-300">
+                            <td class="py-3 px-4 font-bold">Moon Bitcoin</td>
+                            <td class="py-3 px-4">2014年</td>
+                            <td class="py-3 px-4">100-1000 Satoshi</td>
+                            <td class="py-3 px-4">$0.0004</td>
+                            <td class="py-3 px-4 text-blue-600">$0.65</td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 px-4 font-bold">FreeBitco.in</td>
+                            <td class="py-3 px-4">2013年</td>
+                            <td class="py-3 px-4">200-20000 Satoshi</td>
+                            <td class="py-3 px-4">$0.002</td>
+                            <td class="py-3 px-4 text-blue-600">$13.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-6 p-4 bg-blue-100 border-2 border-blue-400 rounded">
+                <p class="text-blue-800 text-sm">
+                    <strong>💰 传奇故事：</strong>
+                    许多早期比特币持有者都是通过水龙头获得第一批比特币的。有人因为觉得"没价值"而删除了钱包，
+                    错过了成为百万富翁的机会。也有人坚持持有，最终实现了财务自由。
+                </p>
+            </div>
+        </div>
+
+        <!-- 使用说明 -->
+        <div class="retro-container p-8">
+            <h2 class="text-2xl font-bold mb-6" style="color: #333;">使用说明</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4" style="color: #555;">如何使用</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                        <li>输入有效的比特币地址</li>
+                        <li>完成简单的数学验证码</li>
+                        <li>点击"领取免费比特币"按钮</li>
+                        <li>等待1小时后可再次领取</li>
+                        <li>邀请朋友获得推荐奖励</li>
+                    </ol>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4" style="color: #555;">注意事项</h3>
+                    <ul class="list-disc list-inside space-y-2 text-sm text-gray-700">
+                        <li>请使用真实有效的比特币地址</li>
+                        <li>每个IP地址每小时只能领取一次</li>
+                        <li>禁止使用机器人或脚本</li>
+                        <li>最低提现金额为10,000 Satoshi</li>
+                        <li>提现通常在24小时内处理</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 返回主页 -->
+    <div class="fixed bottom-6 right-6">
+        <a href="index.html" class="retro-button p-4 rounded-full">
+            🏠 首页
+        </a>
+    </div>
+
+    <!-- 返回顶部 -->
+    <div class="fixed bottom-6 left-6">
+        <button onclick="scrollToTop()" class="retro-button p-4 rounded-full">
+            ⬆️ 顶部
+        </button>
+    </div>
+
+    <script>
+        // 验证码系统
+        let currentCaptcha = { question: '', answer: 0 };
+        
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const operators = ['+', '-', '*'];
+            const operator = operators[Math.floor(Math.random() * operators.length)];
+            
+            let answer;
+            switch(operator) {
+                case '+': answer = num1 + num2; break;
+                case '-': answer = num1 - num2; break;
+                case '*': answer = num1 * num2; break;
+            }
+            
+            currentCaptcha = {
+                question: `${num1} ${operator} ${num2} = ?`,
+                answer: answer
+            };
+            
+            document.getElementById('captcha').textContent = currentCaptcha.question;
+        }
+        
+        function refreshCaptcha() {
+            generateCaptcha();
+            document.getElementById('captchaInput').value = '';
+        }
+        
+        // 领取功能
+        function claimSatoshi() {
+            const address = document.getElementById('btcAddress').value.trim();
+            const captchaInput = parseInt(document.getElementById('captchaInput').value);
+            
+            // 验证地址
+            if (!address || address.length < 26) {
+                alert('请输入有效的比特币地址！');
+                return;
+            }
+            
+            // 验证验证码
+            if (captchaInput !== currentCaptcha.answer) {
+                alert('验证码错误，请重新计算！');
+                refreshCaptcha();
+                return;
+            }
+            
+            // 检查冷却时间
+            const lastClaim = localStorage.getItem('lastClaimTime');
+            const now = Date.now();
+            if (lastClaim && (now - parseInt(lastClaim)) < 3600000) { // 1小时 = 3600000毫秒
+                const timeLeft = Math.ceil((3600000 - (now - parseInt(lastClaim))) / 1000);
+                startCooldown(timeLeft);
+                return;
+            }
+            
+            // 模拟领取
+            const amount = Math.floor(Math.random() * 451) + 50; // 50-500 Satoshi
+            const txId = generateTxId();
+            
+            // 显示成功消息
+            document.getElementById('claimedAmount').textContent = amount;
+            document.getElementById('txId').textContent = txId;
+            document.getElementById('successMessage').classList.remove('hidden');
+            document.getElementById('successMessage').classList.add('claim-effect');
+            
+            // 更新统计
+            updateStats(amount);
+            
+            // 设置冷却时间
+            localStorage.setItem('lastClaimTime', now.toString());
+            startCooldown(3600);
+            
+            // 刷新验证码
+            refreshCaptcha();
+            
+            // 清空输入
+            document.getElementById('btcAddress').value = '';
+            document.getElementById('captchaInput').value = '';
+            
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.add('hidden');
+                document.getElementById('successMessage').classList.remove('claim-effect');
+            }, 5000);
+        }
+        
+        // 生成模拟交易ID
+        function generateTxId() {
+            const chars = '0123456789abcdef';
+            let result = '';
+            for (let i = 0; i < 64; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        
+        // 冷却倒计时
+        function startCooldown(seconds) {
+            const button = document.getElementById('claimButton');
+            const timer = document.getElementById('cooldownTimer');
+            const timeLeft = document.getElementById('timeLeft');
+            
+            button.disabled = true;
+            button.textContent = '⏰ 冷却中...';
+            button.style.opacity = '0.5';
+            timer.classList.remove('hidden');
+            
+            const interval = setInterval(() => {
+                seconds--;
+                timeLeft.textContent = seconds;
+                
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    button.disabled = false;
+                    button.textContent = '💰 领取免费比特币 💰';
+                    button.style.opacity = '1';
+                    timer.classList.add('hidden');
+                }
+            }, 1000);
+        }
+        
+        // 更新统计数据
+        function updateStats(amount) {
+            // 更新今日发放
+            const todayPayout = parseInt(document.getElementById('todayPayout').textContent.replace(',', ''));
+            const newTodayPayout = todayPayout + amount;
+            document.getElementById('todayPayout').textContent = newTodayPayout.toLocaleString();
+            document.getElementById('todayUSD').textContent = (newTodayPayout * 0.00065).toFixed(2);
+            
+            // 更新总发放
+            const totalPayout = parseInt(document.getElementById('totalPayout').textContent.replace(/,/g, ''));
+            const newTotalPayout = totalPayout + amount;
+            document.getElementById('totalPayout').textContent = newTotalPayout.toLocaleString();
+            document.getElementById('totalUSD').textContent = (newTotalPayout * 0.00065).toFixed(2);
+            
+            // 随机更新用户数
+            const userCount = parseInt(document.getElementById('userCount').textContent.replace(',', ''));
+            document.getElementById('userCount').textContent = (userCount + Math.floor(Math.random() * 3)).toLocaleString();
+        }
+        
+        // 更新时间显示
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString();
+        }
+        
+        // 获取比特币价格
+        async function updateBTCPrice() {
+            try {
+                // 这里可以接入真实的价格API
+                const prices = [108000, 108280, 108500, 109000, 107800];
+                const randomPrice = prices[Math.floor(Math.random() * prices.length)];
+                document.getElementById('btcPrice').textContent = randomPrice.toLocaleString();
+            } catch (error) {
+                console.log('价格更新失败');
+            }
+        }
+        
+        // 滚动到顶部
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // 检查冷却状态
+        function checkCooldownStatus() {
+            const lastClaim = localStorage.getItem('lastClaimTime');
+            if (lastClaim) {
+                const now = Date.now();
+                const timePassed = now - parseInt(lastClaim);
+                if (timePassed < 3600000) {
+                    const timeLeft = Math.ceil((3600000 - timePassed) / 1000);
+                    startCooldown(timeLeft);
+                }
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            generateCaptcha();
+            updateTime();
+            updateBTCPrice();
+            checkCooldownStatus();
+            
+            // 定时更新
+            setInterval(updateTime, 1000);
+            setInterval(updateBTCPrice, 30000);
+            
+            // 随机更新Satoshi数量
+            setInterval(() => {
+                const amount = Math.floor(Math.random() * 451) + 50;
+                document.getElementById('satoshiAmount').textContent = amount;
+            }, 5000);
+            
+            // 随机更新活跃用户数
+            setInterval(() => {
+                const current = parseInt(document.getElementById('activeUsers').textContent);
+                const change = Math.floor(Math.random() * 5) - 2; // -2 到 +2
+                const newCount = Math.max(400, current + change);
+                document.getElementById('activeUsers').textContent = newCount;
+            }, 10000);
+        });
+        
+        // 复古音效（可选）
+        function playRetroSound() {
+            // 可以添加复古的音效
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'square';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+    </script>
+</body>
+</html>
