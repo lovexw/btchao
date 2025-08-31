@@ -123,31 +123,34 @@
             margin: 20px 0;
         }
         .ahr-indicator {
-            position: relative;
-            height: 60px;
-            background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #ef4444 100%);
-            border-radius: 30px;
-            overflow: hidden;
+            position: relative !important;
+            height: 80px !important;
+            background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #ef4444 100%) !important;
+            border-radius: 40px !important;
+            overflow: hidden !important;
+            margin: 20px 0 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
         }
         .ahr-pointer {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 40px;
-            background: white;
-            border-radius: 2px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            transition: left 0.5s ease;
+            position: absolute !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            width: 6px !important;
+            height: 60px !important;
+            background: white !important;
+            border-radius: 3px !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+            transition: left 0.5s ease !important;
+            border: 2px solid rgba(0,0,0,0.1) !important;
         }
         .zone-label {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 12px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            position: absolute !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+            color: white !important;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7) !important;
         }
         
         /* 备用按钮样式 */
@@ -225,17 +228,17 @@
                     </div>
                     
                     <!-- AHR999指示器 -->
-                    <div class="mt-6">
-                        <div class="ahr-indicator">
-                            <div class="zone-label" style="left: 16.7%;">抄底区间</div>
-                            <div class="zone-label" style="left: 50%;">定投区间</div>
-                            <div class="zone-label" style="left: 83.3%;">观望区间</div>
-                            <div class="ahr-pointer" id="ahrPointer" style="left: 54.2%;"></div>
+                    <div class="mt-8" style="margin-top: 2rem;">
+                        <div class="ahr-indicator" style="position: relative; height: 80px; background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #ef4444 100%); border-radius: 40px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                            <div class="zone-label" style="position: absolute; top: 50%; transform: translateY(-50%); left: 16.7%; font-size: 16px; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">抄底区间</div>
+                            <div class="zone-label" style="position: absolute; top: 50%; transform: translateY(-50%); left: 50%; font-size: 16px; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">定投区间</div>
+                            <div class="zone-label" style="position: absolute; top: 50%; transform: translateY(-50%); left: 83.3%; font-size: 16px; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">观望区间</div>
+                            <div class="ahr-pointer" id="ahrPointer" style="position: absolute; top: 50%; transform: translateY(-50%); left: 55.5%; width: 6px; height: 60px; background: white; border-radius: 3px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); transition: left 0.5s ease; border: 2px solid rgba(0,0,0,0.1);"></div>
                         </div>
-                        <div class="flex justify-between text-xs mt-2 opacity-80">
-                            <span>0.45</span>
-                            <span>1.2</span>
-                            <span>5.0+</span>
+                        <div class="flex justify-between text-sm mt-3 opacity-90" style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-top: 0.75rem; opacity: 0.9; position: relative;">
+                            <span style="color: #10b981; font-weight: 600; font-size: 14px;">0.45</span>
+                            <span style="color: #f59e0b; font-weight: 600; font-size: 14px;">1.2</span>
+                            <span style="color: #ef4444; font-weight: 600; font-size: 14px;">5.0+</span>
                         </div>
                     </div>
                 </div>
@@ -530,15 +533,21 @@
             const pointer = document.getElementById('ahrPointer');
             let position;
             
-            if (ahr999 < 0.45) {
+            // 0.45对应33.3%位置，1.2对应66.6%位置
+            if (ahr999 <= 0.45) {
+                // 抄底区间：0到33.3%
                 position = (ahr999 / 0.45) * 33.3;
-            } else if (ahr999 < 1.2) {
+            } else if (ahr999 <= 1.2) {
+                // 定投区间：33.3%到66.6%
                 position = 33.3 + ((ahr999 - 0.45) / (1.2 - 0.45)) * 33.3;
             } else {
+                // 观望区间：66.6%到100%
                 position = 66.6 + Math.min(((ahr999 - 1.2) / (5 - 1.2)) * 33.4, 33.4);
             }
             
             pointer.style.left = Math.min(Math.max(position, 0), 100) + '%';
+            
+            console.log(`AHR999: ${ahr999}, 计算位置: ${position.toFixed(1)}%`);
         }
 
         // 初始化数据
