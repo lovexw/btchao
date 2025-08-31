@@ -13,8 +13,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2726670321929378"
-         crossorigin="anonymous"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -106,7 +105,28 @@
                 <div class="mb-4 text-center">
                     <div class="inline-flex items-center bg-green-500/20 text-green-100 px-4 py-2 rounded-full text-sm">
                         <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                        <span id="dataStatus">实时数据 | 来源: Coinank API</span>
+                        <span id="dataStatus">实时计算 | 数据来源: GitHub CSV</span>
+                    </div>
+                </div>
+                
+                <!-- API错误提示 -->
+                <div id="apiErrorNotice" class="hidden mb-6 max-w-2xl mx-auto">
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <i class="fa fa-exclamation-triangle text-yellow-600 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-medium text-yellow-800 mb-2">数据源说明</h4>
+                                <p class="text-sm text-yellow-700 mb-3">
+                                    当前使用GitHub CSV数据源自动计算AHR999指数。如果GitHub数据暂时无法访问，会使用备用数据源。
+                                </p>
+                                <div class="text-xs text-yellow-600">
+                                    <p>• 主要数据源: <a href="https://github.com/lovexw/btc-ma-new/blob/main/public/btc-price.csv" target="_blank" class="underline">GitHub CSV</a> (每日0点更新)</p>
+                                    <p>• 备用数据源: CoinGlass、Coinank API</p>
+                                    <p>• 缓存数据: 最新至2025-08-31</p>
+                                    <p>• AHR999指数使用标准公式实时计算</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -125,6 +145,14 @@
                         <div class="text-center">
                             <div class="text-lg font-bold mb-2" id="lastUpdate">2025-08-30</div>
                             <div class="text-sm opacity-80">更新时间</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 数据统计信息 -->
+                    <div class="mt-4 text-center">
+                        <div class="inline-flex items-center bg-white/5 backdrop-blur-sm rounded-lg px-4 py-2 text-sm">
+                            <i class="fa fa-database mr-2"></i>
+                            <span id="dataStats">基于历史数据实时计算</span>
                         </div>
                     </div>
                     
@@ -215,8 +243,6 @@
                     </ul>
                 </div>
             </div>
-
-
         </section>
 
         <!-- 计算方法 -->
@@ -262,11 +288,7 @@
                     </div>
                 </div>
             </div>
-
-
         </section>
-
-
 
         <!-- 投资策略 -->
         <section id="strategy" class="mb-16">
@@ -376,8 +398,6 @@
             </div>
         </section>
 
-
-
         <!-- 风险提示 -->
         <section class="mb-16">
             <div class="bg-red-50 border border-red-200 rounded-2xl p-8">
@@ -434,77 +454,391 @@
         // 获取AHR999指数数据
         async function fetchAHR999Data() {
             try {
-                const response = await fetch('https://open-api.coinank.com/api/indicator/getAhr999');
-                const data = await response.json();
+                console.log('从新API获取AHR999数据...');
+                updateDataStatus('正在获取AHR999数据...', 'loading');
                 
+                // 首先尝试新的API接口
+                const apiData = await fetchFromNewAPI();
+                if (apiData && apiData.success) {
+                    return apiData;
+                }
+                
+                // 如果新API失败，回退到GitHub CSV
+                console.log('新API失败，尝试GitHub CSV...');
+                const csvData = await fetchBitcoinPriceFromGitHub();
+                if (csvData && csvData.length > 0) {
+                    console.log(`成功获取 ${csvData.length} 条价格数据`);
+                    
+                    // 计算200日移动平均线和AHR999指数
+                    const calculatedData = calculateAHR999FromPriceData(csvData);
+                    
+                    if (calculatedData.ahr999List.length > 0) {
+                        updateDataStatus(`实时计算 | 数据来源: GitHub CSV (${csvData.length}条记录)`, 'success');
+                        return {
+                            success: true,
+                            timeList: calculatedData.timeList,
+                            avgList: calculatedData.avgList,
+                            priceList: calculatedData.priceList,
+                            ahr999List: calculatedData.ahr999List
+                        };
+                    }
+                }
+                
+                // 如果GitHub数据失败，尝试其他数据源
+                console.log('GitHub数据获取失败，尝试备用数据源...');
+                const backupData = await fetchFromBackupSources();
+                if (backupData && backupData.success) {
+                    return backupData;
+                }
+                
+            } catch (error) {
+                console.error('获取AHR999数据失败:', error);
+            }
+            
+            // 所有数据源都失败，使用缓存数据
+            console.log('所有数据源失败，使用缓存数据');
+            updateDataStatus('使用缓存数据 | 最新: 2025-08-31', 'error');
+            return getFallbackAHR999Data();
+        }
+
+        // 从新的AHR999 API获取数据
+        async function fetchFromNewAPI() {
+            try {
+                const response = await fetch('https://ahr999.btchao.com/api/ahr999/latest', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('新API数据:', data);
+                
+                if (data.ahr999 && data.currentPrice) {
+                    // 构造返回数据格式
+                    const timestamp = new Date(data.date || data.timestamp).getTime();
+                    
+                    updateDataStatus(`实时数据 | 来源: AHR999 API`, 'success');
+                    
+                    return {
+                        success: true,
+                        timeList: [timestamp],
+                        priceList: [data.currentPrice],
+                        avgList: [data.dcaCost || data.currentPrice / 1.2], // 使用DCA成本或估算值
+                        ahr999List: [data.ahr999]
+                    };
+                }
+                
+                return null;
+            } catch (error) {
+                console.error('新API获取失败:', error);
+                return null;
+            }
+        }
+
+        // 从GitHub CSV获取比特币价格数据
+        async function fetchBitcoinPriceFromGitHub() {
+            try {
+                const csvUrl = 'https://raw.githubusercontent.com/lovexw/btc-ma-new/main/public/btc-price.csv';
+                console.log('获取CSV数据:', csvUrl);
+                
+                const response = await fetch(csvUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'text/csv, text/plain, */*'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const csvText = await response.text();
+                console.log('CSV数据长度:', csvText.length);
+                
+                return parseCSVData(csvText);
+                
+            } catch (error) {
+                console.error('获取GitHub CSV数据失败:', error);
+                return null;
+            }
+        }
+
+        // 解析CSV数据
+        function parseCSVData(csvText) {
+            try {
+                const lines = csvText.trim().split('\n');
+                const data = [];
+                
+                // 跳过标题行，从第二行开始解析
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    const columns = line.split(',');
+                    if (columns.length >= 2) {
+                        const dateStr = columns[0].trim();
+                        const priceStr = columns[1].trim();
+                        
+                        // 解析日期和价格
+                        const date = new Date(dateStr);
+                        const price = parseFloat(priceStr);
+                        
+                        if (!isNaN(date.getTime()) && !isNaN(price) && price > 0) {
+                            data.push({
+                                date: dateStr,
+                                timestamp: date.getTime(),
+                                price: price
+                            });
+                        }
+                    }
+                }
+                
+                // 按日期排序
+                data.sort((a, b) => a.timestamp - b.timestamp);
+                console.log(`解析CSV数据成功: ${data.length} 条记录`);
+                console.log('最新数据:', data[data.length - 1]);
+                
+                return data;
+                
+            } catch (error) {
+                console.error('解析CSV数据失败:', error);
+                return null;
+            }
+        }
+
+        // 根据价格数据计算AHR999指数
+        function calculateAHR999FromPriceData(priceData) {
+            const result = {
+                timeList: [],
+                priceList: [],
+                avgList: [],
+                ahr999List: []
+            };
+            
+            // 需要至少200天的数据来计算200日移动平均线
+            if (priceData.length < 200) {
+                console.warn('数据不足200天，无法计算200日移动平均线');
+                return result;
+            }
+            
+            // 比特币创世区块时间: 2009-01-03
+            const genesisTime = new Date('2009-01-03').getTime();
+            
+            // 从第200天开始计算（索引199）
+            for (let i = 199; i < priceData.length; i++) {
+                const currentData = priceData[i];
+                
+                // 计算200日移动平均线
+                let sum = 0;
+                for (let j = i - 199; j <= i; j++) {
+                    sum += priceData[j].price;
+                }
+                const ma200 = sum / 200;
+                
+                // 计算距离创世区块的天数
+                const daysSinceGenesis = Math.floor((currentData.timestamp - genesisTime) / (1000 * 60 * 60 * 24));
+                
+                // 计算AHR999指数
+                const ahr999 = calculateAHR999Index(currentData.price, ma200, daysSinceGenesis);
+                
+                result.timeList.push(currentData.timestamp);
+                result.priceList.push(currentData.price);
+                result.avgList.push(ma200);
+                result.ahr999List.push(ahr999);
+            }
+            
+            console.log(`计算完成: ${result.ahr999List.length} 个AHR999数据点`);
+            return result;
+        }
+
+        // 计算AHR999指数的核心公式
+        function calculateAHR999Index(price, ma200, daysSinceGenesis) {
+            try {
+                // AHR999公式: (价格/200日均线) / (10^(1.83 * log10(天数) - 6.14))
+                const priceRatio = price / ma200;
+                const timeRatio = Math.pow(10, 1.83 * Math.log10(daysSinceGenesis) - 6.14);
+                const ahr999 = priceRatio / timeRatio;
+                
+                return ahr999;
+            } catch (error) {
+                console.error('计算AHR999指数失败:', error);
+                return 0;
+            }
+        }
+
+        // 备用数据源
+        async function fetchFromBackupSources() {
+            const backupSources = [
+                {
+                    url: 'https://fapi.coinglass.com/api/index/ahr999',
+                    name: 'CoinGlass',
+                    parser: parseCoinGlassData
+                },
+                {
+                    url: 'https://open-api.coinank.com/api/indicator/getAhr999',
+                    name: 'Coinank',
+                    parser: parseCoinankData
+                }
+            ];
+            
+            for (let apiSource of backupSources) {
+                try {
+                    console.log('尝试备用API:', apiSource.name);
+                    const response = await fetch(apiSource.url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        const parsedData = apiSource.parser(data);
+                        if (parsedData && parsedData.success) {
+                            updateDataStatus(`备用数据 | 来源: ${apiSource.name}`, 'success');
+                            return parsedData;
+                        }
+                    }
+                } catch (apiError) {
+                    console.log(`备用API ${apiSource.name} 失败:`, apiError.message);
+                }
+            }
+            
+            return null;
+        }
+
+        // 解析CoinGlass数据格式
+        function parseCoinGlassData(data) {
+            try {
+                if (data && data.code === 0 && data.data) {
+                    const items = data.data;
+                    if (Array.isArray(items) && items.length > 0) {
+                        const timeList = [];
+                        const priceList = [];
+                        const avgList = [];
+                        const ahr999List = [];
+                        
+                        items.forEach(item => {
+                            if (item.time && item.ahr999 && item.price) {
+                                timeList.push(new Date(item.time).getTime());
+                                ahr999List.push(parseFloat(item.ahr999));
+                                priceList.push(parseFloat(item.price));
+                                avgList.push(parseFloat(item.ma200 || item.avg || item.price / 2.4));
+                            }
+                        });
+                        
+                        if (ahr999List.length > 0) {
+                            return {
+                                success: true,
+                                timeList: timeList,
+                                avgList: avgList,
+                                priceList: priceList,
+                                ahr999List: ahr999List
+                            };
+                        }
+                    }
+                }
+                return null;
+            } catch (error) {
+                console.error('解析CoinGlass数据失败:', error);
+                return null;
+            }
+        }
+
+        // 解析Coinank数据格式
+        function parseCoinankData(data) {
+            try {
                 if (data.success && data.data) {
                     return {
                         success: true,
                         timeList: data.data.timeList,
-                        avgList: data.data.avg, // 200日均线
-                        priceList: data.data.valueList, // 价格数据
-                        ahr999List: data.data.ahr999 // AHR999指数
+                        avgList: data.data.avg,
+                        priceList: data.data.valueList,
+                        ahr999List: data.data.ahr999
                     };
-                } else {
-                    throw new Error('API返回数据格式错误');
                 }
+                return null;
             } catch (error) {
-                console.error('获取AHR999数据失败:', error);
-                return getFallbackAHR999Data();
+                console.error('解析Coinank数据失败:', error);
+                return null;
             }
         }
 
-        // 备用AHR999数据
+        // 更新数据状态显示
+        function updateDataStatus(message, type = 'success') {
+            const statusElement = document.getElementById('dataStatus');
+            const parentElement = statusElement.parentElement;
+            
+            statusElement.textContent = message;
+            
+            switch(type) {
+                case 'loading':
+                    parentElement.className = 'inline-flex items-center bg-yellow-500/20 text-yellow-100 px-4 py-2 rounded-full text-sm';
+                    break;
+                case 'error':
+                    parentElement.className = 'inline-flex items-center bg-red-500/20 text-red-100 px-4 py-2 rounded-full text-sm';
+                    break;
+                case 'success':
+                default:
+                    parentElement.className = 'inline-flex items-center bg-green-500/20 text-green-100 px-4 py-2 rounded-full text-sm';
+                    break;
+            }
+        }
+
+        // 备用AHR999数据 - 使用CoinGlass最新数据
         function getFallbackAHR999Data() {
+            // 基于你提供的CoinGlass最新数据
+            const latestData = [
+                {
+                    date: '2025-08-31',
+                    ahr999: 0.95882505,
+                    price: 108759.7,
+                    ma200: 100353.3032
+                },
+                {
+                    date: '2025-08-30',
+                    ahr999: 0.95298829,
+                    price: 108341.5,
+                    ma200: 100289.1789
+                },
+                {
+                    date: '2025-08-29',
+                    ahr999: 1.02909510,
+                    price: 112500.5,
+                    ma200: 100235.6764
+                },
+                {
+                    date: '2025-08-28',
+                    ahr999: 1.00717940,
+                    price: 111199.9,
+                    ma200: 100158.5296
+                }
+            ];
+            
+            const timeList = [];
+            const priceList = [];
+            const avgList = [];
+            const ahr999List = [];
+            
+            latestData.forEach(item => {
+                timeList.push(new Date(item.date).getTime());
+                priceList.push(item.price);
+                avgList.push(item.ma200);
+                ahr999List.push(item.ahr999);
+            });
+            
             return {
                 success: false,
-                timeList: [Date.now()],
-                avgList: [45000],
-                priceList: [108280],
-                ahr999List: [0.953]
+                timeList: timeList,
+                avgList: avgList,
+                priceList: priceList,
+                ahr999List: ahr999List
             };
-        }
-
-        // 备用数据
-        function getFallbackData() {
-            return [
-                { date: '2015-01-01', price: 314 },
-                { date: '2016-01-01', price: 434 },
-                { date: '2017-01-01', price: 998 },
-                { date: '2018-01-01', price: 13412 },
-                { date: '2019-01-01', price: 3693 },
-                { date: '2020-01-01', price: 7194 },
-                { date: '2021-01-01', price: 29374 },
-                { date: '2022-01-01', price: 46306 },
-                { date: '2023-01-01', price: 16625 },
-                { date: '2024-01-01', price: 42278 },
-                { date: '2025-08-30', price: 108280 }
-            ];
-        }
-
-        // 计算200日移动平均线
-        function calculateMA200(data) {
-            const result = [];
-            for (let i = 199; i < data.length; i++) {
-                let sum = 0;
-                for (let j = i - 199; j <= i; j++) {
-                    sum += data[j].price;
-                }
-                result.push({
-                    date: data[i].date,
-                    price: data[i].price,
-                    ma200: sum / 200
-                });
-            }
-            return result;
-        }
-
-        // 计算AHR999指数
-        function calculateAHR999(price, ma200, days) {
-            const priceRatio = price / ma200;
-            // 正确的AHR999公式：使用指数增长模型
-            const timeRatio = Math.pow(10, 1.83 * Math.log10(days) - 6.14);
-            return priceRatio / timeRatio;
         }
 
         // 获取投资建议
@@ -531,15 +865,13 @@
             pointer.style.left = Math.min(Math.max(position, 0), 100) + '%';
         }
 
-
-
         // 初始化图表
         async function initCharts() {
             const ahrApiData = await fetchAHR999Data();
             
             // 处理API数据
             const ahrData = [];
-            if (ahrApiData.success && ahrApiData.timeList) {
+            if (ahrApiData && ahrApiData.success && ahrApiData.timeList) {
                 for (let i = 0; i < ahrApiData.timeList.length; i++) {
                     const timestamp = ahrApiData.timeList[i];
                     const date = new Date(timestamp).toISOString().split('T')[0];
@@ -560,13 +892,15 @@
             } else {
                 // 使用备用数据
                 const fallbackData = getFallbackAHR999Data();
-                ahrData.push({
-                    date: new Date().toISOString().split('T')[0],
-                    price: fallbackData.priceList[0],
-                    ma200: fallbackData.avgList[0],
-                    ahr999: fallbackData.ahr999List[0],
-                    timestamp: Date.now()
-                });
+                for (let i = 0; i < fallbackData.timeList.length; i++) {
+                    ahrData.push({
+                        date: new Date(fallbackData.timeList[i]).toISOString().split('T')[0],
+                        price: fallbackData.priceList[i],
+                        ma200: fallbackData.avgList[i],
+                        ahr999: fallbackData.ahr999List[i],
+                        timestamp: fallbackData.timeList[i]
+                    });
+                }
             }
 
             // 更新当前数据显示
@@ -577,22 +911,17 @@
                 document.getElementById('currentAHR').textContent = latestData.ahr999.toFixed(3);
                 document.getElementById('investmentAdvice').textContent = advice.text;
                 document.getElementById('investmentAdvice').className = `text-2xl font-bold mb-2 ${advice.color}`;
-
                 
                 updateAHRPointer(latestData.ahr999);
                 
                 // 更新最后更新时间
                 document.getElementById('lastUpdate').textContent = new Date(latestData.timestamp).toLocaleDateString('zh-CN');
+                
+                // 更新数据统计
+                const statsText = `${ahrData.length} 天历史数据 | 200日均线: $${latestData.ma200?.toLocaleString() || 'N/A'}`;
+                document.getElementById('dataStats').textContent = statsText;
             }
-
-
-
-
         }
-
-
-
-
 
         // 平滑滚动
         function scrollToTop() {
@@ -614,14 +943,11 @@
         // 自动更新AHR999数据
         async function updateAHR999Data() {
             try {
-                // 更新状态指示器
-                const statusElement = document.getElementById('dataStatus');
-                statusElement.textContent = '正在更新数据...';
-                statusElement.parentElement.className = 'inline-flex items-center bg-yellow-500/20 text-yellow-100 px-4 py-2 rounded-full text-sm';
+                updateDataStatus('正在更新数据...', 'loading');
                 
                 const ahrApiData = await fetchAHR999Data();
                 
-                if (ahrApiData.success && ahrApiData.ahr999List.length > 0) {
+                if (ahrApiData && ahrApiData.success && ahrApiData.ahr999List && ahrApiData.ahr999List.length > 0) {
                     const latestIndex = ahrApiData.ahr999List.length - 1;
                     const latestAHR = ahrApiData.ahr999List[latestIndex];
                     const latestPrice = ahrApiData.priceList[latestIndex];
@@ -633,7 +959,6 @@
                     document.getElementById('currentAHR').textContent = latestAHR.toFixed(3);
                     document.getElementById('investmentAdvice').textContent = advice.text;
                     document.getElementById('investmentAdvice').className = `text-2xl font-bold mb-2 ${advice.color}`;
-
                     
                     updateAHRPointer(latestAHR);
                     
@@ -641,21 +966,38 @@
                     const updateTime = new Date(latestTimestamp);
                     document.getElementById('lastUpdate').textContent = updateTime.toLocaleDateString('zh-CN') + ' ' + updateTime.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
                     
-                    // 更新状态指示器为成功
-                    statusElement.textContent = `实时数据 | 来源: Coinank API | 最新: ${updateTime.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'})}`;
-                    statusElement.parentElement.className = 'inline-flex items-center bg-green-500/20 text-green-100 px-4 py-2 rounded-full text-sm';
+                    updateDataStatus(`实时计算 | 数据来源: GitHub CSV (${ahrApiData.ahr999List.length}条记录)`, 'success');
                     
                     console.log('AHR999数据更新成功:', latestAHR.toFixed(3));
                 } else {
-                    throw new Error('API返回数据无效');
+                    // 使用备用数据
+                    const fallbackData = getFallbackAHR999Data();
+                    const latestAHR = fallbackData.ahr999List[0];
+                    const latestPrice = fallbackData.priceList[0];
+                    
+                    const advice = getInvestmentAdvice(latestAHR);
+                    document.getElementById('currentAHR').textContent = latestAHR.toFixed(3);
+                    document.getElementById('investmentAdvice').textContent = advice.text;
+                    document.getElementById('investmentAdvice').className = `text-2xl font-bold mb-2 ${advice.color}`;
+                    
+                    updateAHRPointer(latestAHR);
+                    document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('zh-CN');
+                    
+                    updateDataStatus('使用缓存数据 | 价格: $' + latestPrice.toLocaleString(), 'error');
                 }
             } catch (error) {
                 console.error('自动更新AHR999数据失败:', error);
-                
-                // 更新状态指示器为错误
-                const statusElement = document.getElementById('dataStatus');
-                statusElement.textContent = '数据更新失败，使用缓存数据';
-                statusElement.parentElement.className = 'inline-flex items-center bg-red-500/20 text-red-100 px-4 py-2 rounded-full text-sm';
+                updateDataStatus('数据更新失败，请稍后重试', 'error');
+            }
+        }
+
+        // 显示/隐藏API错误提示
+        function toggleApiErrorNotice(show) {
+            const notice = document.getElementById('apiErrorNotice');
+            if (show) {
+                notice.classList.remove('hidden');
+            } else {
+                notice.classList.add('hidden');
             }
         }
 
@@ -668,6 +1010,14 @@
             
             // 页面获得焦点时也更新一次
             window.addEventListener('focus', updateAHR999Data);
+            
+            // 检查API状态并显示相应提示
+            setTimeout(() => {
+                const statusElement = document.getElementById('dataStatus');
+                if (statusElement.textContent.includes('失败') || statusElement.textContent.includes('缓存')) {
+                    toggleApiErrorNotice(true);
+                }
+            }, 2000);
         });
 
         // 滚动动画
