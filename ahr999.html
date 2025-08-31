@@ -515,8 +515,19 @@
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 
-                const data = await response.json();
-                console.log('新API数据:', data);
+                let text = await response.text();
+                console.log('新API原始数据:', text);
+                
+                // 修复JSON格式问题 - 在字段之间添加逗号
+                text = text.replace(/"ahr999":([^"]+)"currentPrice"/, '"ahr999":$1,"currentPrice"');
+                text = text.replace(/"currentPrice":([^"]+)"dcaCost"/, '"currentPrice":$1,"dcaCost"');
+                text = text.replace(/"dcaCost":([^"]+)"exponentialValue"/, '"dcaCost":$1,"exponentialValue"');
+                text = text.replace(/"exponentialValue":([^"]+)"coinAge"/, '"exponentialValue":$1,"coinAge"');
+                text = text.replace(/"coinAge":([^"]+)"timestamp"/, '"coinAge":$1,"timestamp"');
+                text = text.replace(/"timestamp":"([^"]+)""date"/, '"timestamp":"$1","date"');
+                
+                const data = JSON.parse(text);
+                console.log('修复后的API数据:', data);
                 
                 if (data.ahr999 && data.currentPrice) {
                     // 构造返回数据格式
