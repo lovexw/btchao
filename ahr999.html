@@ -222,7 +222,7 @@
                             <div class="text-sm opacity-80">投资建议</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-lg font-bold mb-2" id="lastUpdate">2025-08-31</div>
+                            <div class="text-lg font-bold mb-2" id="lastUpdate">加载中...</div>
                             <div class="text-sm opacity-80">更新时间</div>
                         </div>
                     </div>
@@ -488,10 +488,11 @@
                 console.error('获取AHR999数据失败:', error);
                 updateDataStatus('数据获取失败，使用备用数据', 'error');
                 
-                // 使用备用数据
+                // 使用备用数据 - 使用当前日期
+                const today = new Date();
                 return {
                     success: true,
-                    timeList: [new Date('2025-08-31').getTime()],
+                    timeList: [today.getTime()],
                     priceList: [108711],
                     avgList: [101234.81],
                     ahr999List: [0.9496]
@@ -567,9 +568,11 @@
                 
                 updateAHRPointer(latestAHR);
                 
-                // 更新时间
+                // 更新时间 - 确保显示当前日期
                 const updateTime = new Date(latestTimestamp);
-                document.getElementById('lastUpdate').textContent = updateTime.toLocaleDateString('zh-CN');
+                const dateString = updateTime.toLocaleDateString('zh-CN');
+                console.log('更新日期显示:', dateString);
+                document.getElementById('lastUpdate').textContent = dateString;
                 
                 console.log('AHR999数据初始化成功:', latestAHR.toFixed(3));
             }
@@ -614,6 +617,10 @@
 
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
+            // 立即显示当前日期
+            const today = new Date();
+            document.getElementById('lastUpdate').textContent = today.toLocaleDateString('zh-CN');
+            
             // 检测CDN资源
             setTimeout(checkCDNResources, 100);
             
